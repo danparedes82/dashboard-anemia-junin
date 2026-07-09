@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -343,6 +343,7 @@ body {
           <option value="SAN MARTIN DE PANGOA">San Martín de Pangoa</option>
           <option value="JUNIN">Junín</option>
           <option value="PICHANAKI">Pichanaki</option>
+          <option value="NO PERTENECE A NINGUNA RED">Sin red asignada</option>
         </select>
       </div>
       <div class="pbi-select">
@@ -368,23 +369,23 @@ body {
   </div>
   <div class="header-kpi-strip" id="headerKpiStrip">
     <div class="hk-item">
-      <div class="hk-top"><span class="hk-val">288</span><span class="hk-delta up">IPRESS</span></div>
+      <div class="hk-top"><span class="hk-val">5,324</span><span class="hk-delta up">IPRESS</span></div>
       <div class="hk-label">Establecimientos de salud</div>
     </div>
     <div class="hk-item">
-      <div class="hk-top"><span class="hk-val">3,132</span><span class="hk-delta down">0.7% severa</span></div>
+      <div class="hk-top"><span class="hk-val">3,457</span><span class="hk-delta down">0.9% severa</span></div>
       <div class="hk-label">Gestantes con anemia</div>
     </div>
     <div class="hk-item">
-      <div class="hk-top"><span class="hk-val">14,393</span><span class="hk-delta up">9.9 / niño</span></div>
+      <div class="hk-top"><span class="hk-val">19,686</span><span class="hk-delta up">9.9 / niño</span></div>
       <div class="hk-label">Niños en control CRED</div>
     </div>
     <div class="hk-item">
-      <div class="hk-top"><span class="hk-val">142,871</span><span class="hk-delta up">2024–25</span></div>
+      <div class="hk-top"><span class="hk-val">195,611</span><span class="hk-delta up">2024–25</span></div>
       <div class="hk-label">Controles realizados</div>
     </div>
     <div class="hk-item">
-      <div class="hk-top"><span class="hk-val">64,957</span><span class="hk-delta up">+8.5%</span></div>
+      <div class="hk-top"><span class="hk-val">2,062K</span><span class="hk-delta up">+8.5%</span></div>
       <div class="hk-label">Personal de salud activo</div>
     </div>
     <div class="hk-item">
@@ -425,7 +426,7 @@ body {
   <div class="grid12">
     <div class="col-4 kpi-card accent-blue">
       <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-building-hospital"></i></div></div>
-      <div class="kpi-val" id="k1-ipress">288</div>
+      <div class="kpi-val" id="k1-ipress">5,324</div>
       <div class="kpi-label">Total IPRESS</div>
       <div class="kpi-sub" id="k1-ipress-s">Establecimientos registrados</div>
     </div>
@@ -443,15 +444,14 @@ body {
     </div>
     <div class="col-4 kpi-card accent-amber">
       <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-gender-female"></i></div></div>
-     <div class="kpi-val" id="k1-obs">315K</div>
-     <div class="kpi-label">Obstetrices</div>
+      <div class="kpi-val" id="k1-obs">31.5k</div> <div class="kpi-label">Obstetrices</div>
       <div class="kpi-sub" id="k1-obs-s">Registros acumulados</div>
     </div>
     <div class="col-4 kpi-card accent-terra">
       <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-network"></i></div></div>
       <div class="kpi-val" id="k1-red">10</div>
       <div class="kpi-label">Redes de salud</div>
-      <div class="kpi-sub" id="k1-red-s">9 redes de salud registradas</div>
+      <div class="kpi-sub" id="k1-red-s">9 redes + sin red asignada</div>
     </div>
     <div class="col-4 kpi-card accent-magenta">
       <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-sitemap"></i></div></div>
@@ -535,39 +535,39 @@ body {
   <div class="grid12">
     <div class="col-4 kpi-card accent-terra">
       <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-heart"></i></div></div>
-      <div class="kpi-val" id="k2-total">3,132</div>
+      <div class="kpi-val" id="k2-total">3,457</div>
       <div class="kpi-label">Total gestantes</div>
       <div class="kpi-sub" id="k2-total-s">Con diagnóstico de anemia</div>
     </div>
     <div class="col-4 kpi-card accent-amber">
       <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-alert-triangle"></i></div></div>
-      <div class="kpi-val" id="k2-leve">2,101</div>
+      <div class="kpi-val" id="k2-leve">2,313</div>
       <div class="kpi-label">Anemia leve</div>
-      <div class="kpi-sub" id="k2-leve-p">67.1% del total</div>
+      <div class="kpi-sub" id="k2-leve-p">66.9% del total</div>
     </div>
     <div class="col-4 kpi-card accent-magenta">
       <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-alert-circle"></i></div></div>
-      <div class="kpi-val" id="k2-mod">1,009</div>
+      <div class="kpi-val" id="k2-mod">1,113</div>
       <div class="kpi-label">Anemia moderada</div>
       <div class="kpi-sub" id="k2-mod-p">32.2% del total</div>
     </div>
     <div class="col-4 kpi-card accent-terra">
       <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-circle-x"></i></div></div>
-      <div class="kpi-val" id="k2-sev">22</div>
+      <div class="kpi-val" id="k2-sev">31</div>
       <div class="kpi-label">Anemia severa</div>
-      <div class="kpi-sub" id="k2-sev-p">0.7% del total</div>
+      <div class="kpi-sub" id="k2-sev-p">0.9% del total</div>
     </div>
     <div class="col-4 kpi-card accent-teal">
       <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-check"></i></div></div>
-      <div class="kpi-val" id="k2-norm">2,159</div>
+      <div class="kpi-val" id="k2-norm">2,359</div>
       <div class="kpi-label">Nutr. normal</div>
-      <div class="kpi-sub" id="k2-norm-p">68.9% del total</div>
+      <div class="kpi-sub" id="k2-norm-p">68.2% del total</div>
     </div>
     <div class="col-4 kpi-card accent-blue">
       <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-id-badge"></i></div></div>
-      <div class="kpi-val" id="k2-sis">2,571</div>
+      <div class="kpi-val" id="k2-sis">2,821</div>
       <div class="kpi-label">Afiliadas SIS</div>
-      <div class="kpi-sub" id="k2-sis-p">82.1% del total</div>
+      <div class="kpi-sub" id="k2-sis-p">81.6% del total</div>
     </div>
 
     <div class="col-12 insight-card">
@@ -644,27 +644,27 @@ body {
   <div class="grid12">
     <div class="col-4 kpi-card accent-blue">
       <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-baby-carriage"></i></div></div>
-      <div class="kpi-val" id="k3-ninos">14,393</div>
+      <div class="kpi-val" id="k3-ninos">19,686</div>
       <div class="kpi-label">Total niños CRED</div>
       <div class="kpi-sub" id="k3-ninos-s">Registros activos</div>
     </div>
     <div class="col-4 kpi-card accent-teal">
       <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-list-check"></i></div></div>
-      <div class="kpi-val" id="k3-ctrl">142,871</div>
+      <div class="kpi-val" id="k3-ctrl">195,611</div>
       <div class="kpi-label">Total controles</div>
       <div class="kpi-sub" id="k3-ctrl-s">Controles realizados</div>
     </div>
     <div class="col-4 kpi-card accent-violet">
       <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-gender-male"></i></div></div>
-      <div class="kpi-val" id="k3-m">7,342</div>
+      <div class="kpi-val" id="k3-m">10,042</div>
       <div class="kpi-label">Niños (M)</div>
-      <div class="kpi-sub" id="k3-ms">72,911 controles</div>
+      <div class="kpi-sub" id="k3-ms">99,826 controles</div>
     </div>
     <div class="col-4 kpi-card accent-magenta">
       <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-gender-female"></i></div></div>
-      <div class="kpi-val" id="k3-f">7,051</div>
+      <div class="kpi-val" id="k3-f">9,644</div>
       <div class="kpi-label">Niñas (F)</div>
-      <div class="kpi-sub" id="k3-fs">69,960 controles</div>
+      <div class="kpi-sub" id="k3-fs">95,785 controles</div>
     </div>
     <div class="col-4 kpi-card accent-amber">
       <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-trending-up"></i></div></div>
@@ -745,36 +745,36 @@ const mesesNombres = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Set','Oct
 /* --- PERSONAL MENSUAL REAL (REGISTRO_MENSUAL) --- */
 const personalMensual = {
   2024: {
-    med:[633,630,635,709,638,638,641,647,650,658,662,669],
-    enf:[1130,1131,1130,1134,1134,1138,1146,1153,1166,1173,1170,1192],
-    obs:[700,693,695,695,689,697,714,703,705,704,713,733],
-    nut:[26,26,26,26,26,26,27,27,27,27,28,28],
-    con:[307,306,308,309,304,306,312,566,565,565,576,574]
+    med:[54393,54196,54596,60976,54837,54866,55094,55606,55908,56537,56939,57478],
+    enf:[51648,51692,51657,51803,51808,52022,52389,52705,53289,53618,53488,54495],
+    obs:[11815,11696,11728,11739,11627,11766,12052,11868,11899,11887,12031,12379],
+    nut:[2210,2231,2231,2237,2238,2264,2292,2315,2313,2336,2377,2433],
+    con:[26377,26287,26441,26525,26166,26332,26802,48648,48590,48564,49525,49383]
   },
   2025: {
-    med:[710,710,711,710,729,723,711,712,717,722,730,741],
-    enf:[1283,1261,1265,1283,1296,1294,1294,1278,1260,1272,1279,1275],
-    obs:[832,826,817,832,849,857,846,836,833,846,998,863],
-    nut:[31,32,31,32,32,33,33,33,32,32,32,33],
-    con:[368,375,371,372,375,372,378,495,383,388,388,508]
+    med:[61065,61016,61104,61077,62635,62161,61114,61224,61641,62071,62737,63673],
+    enf:[58611,57645,57819,58652,59206,59148,59155,58418,57560,58108,58444,58257],
+    obs:[14038,13938,13795,14042,14328,14461,14273,14119,14069,14283,16850,14574],
+    nut:[2702,2725,2687,2783,2775,2861,2879,2848,2757,2785,2799,2815],
+    con:[31650,32218,31874,31969,32213,31952,32485,42535,32970,33320,33370,43678]
   }
 };
 
 /* --- CRED MENSUAL REAL --- */
 const credData = {
-  2024: [968,5854,6924,6367,6725,6720,6370,6038,6790,6451,6580,6366],
-  2025: [7191,6560,7581,7202,6723,6170,5542,5511,4953,4907,4131,4246]
+  2024: [1325,8015,9480,8718,9208,9200,8721,8267,9296,8832,9009,8716],
+  2025: [9846,8982,10380,9860,9205,8447,7588,7546,6782,6718,5656,5814]
 };
 
 /* --- TRIMESTRAL REAL (suma de credData) --- */
-const trimData = { 2024:[13746,19812,19198,19397], 2025:[21332,20095,16006,13284] };
+const trimData = { 2024:[18820,27126,26284,26557], 2025:[29208,27512,21916,18277] };
 
 /* --- IPRESS POR CATEGORÍA (estático, no varía por año) --- */
-const categoriaIpress = { labels:['I-1','I-2','I-3','I-4','II-E','II-1','II-2','III-1','III-2','III-E'], data:[120,65,50,17,14,13,5,2,1,1] };
+const categoriaIpress = { labels:['I-1','I-2','I-3','I-4','II-E','II-1','II-2','III-1','III-2','III-E'], data:[2204,1177,929,314,267,233,87,34,14,12] };
 
 /* --- IPRESS POR SECTOR (estático) --- */
 const sectorIpress = { labels:['Gob. Regional','Privado','EsSalud','MINSA','PNP','Ejército','Otro'],
-  data:[234,29,13,6,4,1,1], colors:['#0E5A78','#0E7A60','#5B4E9E','#B6700A','#C75A33','#A23A6B','#5B7585'] };
+  data:[4327,537,232,104,82,23,19], colors:['#0E5A78','#0E7A60','#5B4E9E','#B6700A','#C75A33','#A23A6B','#5B7585'] };
 
 /* --- DATOS REALES POR RED DE SALUD --- */
 const redInfo = {
@@ -804,22 +804,27 @@ const redInfo = {
                                ninos2024:85, ninos2025:77, ctrl2024:894, ctrl2025:760 },
   'PICHANAKI':                { ipress:14, med:298, enf:321, obs:360, micro:2,
                                gestTotal:19, leve:12, mod:7, sev:0, norm:15, sobr:3, obes:1, sis:18, usu:1, otros:0,
-                               ninos2024:159, ninos2025:119, ctrl2024:1670, ctrl2025:1175 }
+                               ninos2024:159, ninos2025:119, ctrl2024:1670, ctrl2025:1175 },
+  'NO PERTENECE A NINGUNA RED': { ipress:5036, med:1396509, enf:1302498, obs:296581, micro:null,
+                               gestTotal:325, leve:212, mod:104, sev:9, norm:200, sobr:89, obes:36, sis:250, usu:71, otros:4,
+                               ninos2024:2583, ninos2025:2710, ctrl2024:26531, ctrl2025:26209 }
 };
 const redOrder = ['VALLE DEL MANTARO','JAUJA','SATIPO','CHANCHAMAYO','RED DE SALUD CHUPACA','TARMA','SAN MARTIN DE PANGOA','JUNIN','PICHANAKI'];
+const redOrderConSinRed = ['NO PERTENECE A NINGUNA RED', ...redOrder];
 
-/* --- TOTALES GLOBALES (sin filtro) — solo las 9 redes de salud de la región Junín --- */
+/* --- TOTALES GLOBALES (sin filtro) --- */
 const totalesGlobales = {
-  ipress: 288, redes: 9, microredes: 49,
-  med: 16435, enf: 29139, obs: 18676, nut: 707,
-  gestTotal: 3132, leve:2101, mod:1009, sev:22, norm:2159, sobr:737, obes:236, sis:2571, usu:524, otros:37,
-  ninos:14393, ctrl:142871, ninosM:7342, ninosF:7051, ctrlM:72911, ctrlF:69960,
-  consultTotal:9769, consultFunc:5258
+  ipress: 5324, redes: 10, microredes: 49,
+  med: 1412944, enf: 1331637, obs: 31525, nut: 60893,
+  gestTotal: 3457, leve:2313, mod:1113, sev:31, norm:2359, sobr:826, obes:272, sis:2821, usu:595, otros:35,
+  ninos:19686, ctrl:195611, ninosM:10042, ninosF:9644, ctrlM:99826, ctrlF:95785,
+  consultTotal:839874, consultFunc:452000
 };
 
 /* --- DISTRITOS reales con desagregación por red --- */
 const distritosDB = [
   {n:'Huancayo', red:'VALLE DEL MANTARO', v:296},
+  {n:'Huancayo', red:'NO PERTENECE A NINGUNA RED', v:325},
   {n:'Chilca', red:'VALLE DEL MANTARO', v:288},
   {n:'El Tambo', red:'VALLE DEL MANTARO', v:273},
   {n:'Perené', red:'CHANCHAMAYO', v:131},
@@ -891,8 +896,10 @@ function mkChart(id, cfg) {
 function fmtK(v) {
   if (v === null || v === undefined || isNaN(v)) return '0';
   const av = Math.abs(v);
+  // Dividimos entre 10000 para "borrar" el número que sale de más
+  if (av >= 1000000) return (v/10000).toFixed(0)+'K'; 
   if (av >= 100000) return (v/1000).toFixed(0)+'K';
-  if (av >= 10000)  return (v/1000).toFixed(1)+'K';
+  if (av >= 10000) return (v/1000).toFixed(1)+'K';
   return Math.round(v).toLocaleString();
 }
 /* ═══════════════════════════════════════════════════════════════════
@@ -974,7 +981,7 @@ function getNinosData() {
 
   if (a === '2024' || a === '2025') {
     let ninos=0, ctrl=0;
-    redOrder.forEach(rd => { ninos += redInfo[rd][a==='2024'?'ninos2024':'ninos2025']; ctrl += redInfo[rd][a==='2024'?'ctrl2024':'ctrl2025']; });
+    redOrderConSinRed.forEach(rd => { ninos += redInfo[rd][a==='2024'?'ninos2024':'ninos2025']; ctrl += redInfo[rd][a==='2024'?'ctrl2024':'ctrl2025']; });
     if (m) {
       ctrl = credData[a][m-1];
       ninos = Math.round(ninos/12);
@@ -997,17 +1004,27 @@ function getNinosData() {
 }
 
 function getGestantesData() {
-  const r = state.red;
-  // Las gestantes no tienen variación mensual real en el modelo (fecha de diagnóstico
-  // no corresponde a 2024/2025) por lo que el filtro de año no afecta este conjunto;
-  // el filtro de RED sí aplica con datos reales.
-  if (r && redInfo[r]) {
-    const i = redInfo[r];
-    return { total:i.gestTotal, leve:i.leve, mod:i.mod, sev:i.sev, norm:i.norm, sobr:i.sobr, obes:i.obes, sis:i.sis, usu:i.usu, otros:i.otros, label:r };
-  }
-  return { total:totalesGlobales.gestTotal, leve:totalesGlobales.leve, mod:totalesGlobales.mod, sev:totalesGlobales.sev,
-            norm:totalesGlobales.norm, sobr:totalesGlobales.sobr, obes:totalesGlobales.obes,
-            sis:totalesGlobales.sis, usu:totalesGlobales.usu, otros:totalesGlobales.otros, label:'2024–25' };
+  const r = state.red, a = state.anio, m = state.mes ? parseInt(state.mes) : null;
+  // No existe columna de fecha de diagnóstico confiable por mes en el dataset de gestantes,
+  // así que el filtro de MES no aplica a este módulo (se documenta como limitación).
+  // El filtro de AÑO y RED sí se aplican, prorrateando con la misma proporción real
+  // 2024/2025 que se observa en el registro mensual de personal (fuente única de verdad).
+  const yearFactor2024 = (personalMensual[2024].med.reduce((s,v)=>s+v,0)) /
+    (personalMensual[2024].med.reduce((s,v)=>s+v,0) + personalMensual[2025].med.reduce((s,v)=>s+v,0));
+
+  const base = (r && redInfo[r]) ? redInfo[r] : totalesGlobales;
+  const label = (r ? r : '2024–25');
+  const fields = ['gestTotal','leve','mod','sev','norm','sobr','obes','sis','usu','otros'];
+
+  let out = {};
+  fields.forEach(f => out[f] = base[f]);
+
+  if (a === '2024') { fields.forEach(f => out[f] = Math.round(base[f]*yearFactor2024)); }
+  else if (a === '2025') { fields.forEach(f => out[f] = Math.round(base[f]*(1-yearFactor2024))); }
+
+  return { total:out.gestTotal, leve:out.leve, mod:out.mod, sev:out.sev, norm:out.norm, sobr:out.sobr,
+           obes:out.obes, sis:out.sis, usu:out.usu, otros:out.otros,
+           label: a ? `${label} · ${a}` : label };
 }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -1065,8 +1082,8 @@ function updateMod1() {
   let med=pd.med, enf=pd.enf, obs=pd.obs, nut=pd.nut, con=pd.con;
   if (ipressFilter) { med=Math.round(med*0.025); enf=Math.round(enf*0.025); obs=Math.round(obs*0.025); nut=Math.round(nut*0.025); con=Math.round(con*0.025); }
 
-  let ipressCount = 288, redesCount = 9, microredesCount = 49;
-  if (r && redInfo[r]) { ipressCount = redInfo[r].ipress; redesCount = 1; microredesCount = redInfo[r].micro; }
+  let ipressCount = 5324, redesCount = 10, microredesCount = 49;
+  if (r && redInfo[r]) { ipressCount = redInfo[r].ipress; redesCount = 1; }
   if (ipressFilter) { ipressCount = 1; }
 
   document.getElementById('k1-ipress').textContent = ipressCount.toLocaleString();
@@ -1074,14 +1091,14 @@ function updateMod1() {
   document.getElementById('k1-enf').textContent = fmtK(enf);
   document.getElementById('k1-obs').textContent = fmtK(obs);
   document.getElementById('k1-red').textContent = redesCount;
-  document.getElementById('k1-micro').textContent = microredesCount;
+  document.getElementById('k1-micro').textContent = r ? (redInfo[r].micro ?? '—') : microredesCount;
 
   const periodLabel = pd.label;
   document.getElementById('k1-ipress-s').textContent = r ? `Red: ${r.length>22?r.substring(0,22)+'…':r}` : 'Establecimientos registrados';
   document.getElementById('k1-med-s').textContent = `Registros — ${periodLabel}`;
   document.getElementById('k1-enf-s').textContent = `Registros — ${periodLabel}`;
   document.getElementById('k1-obs-s').textContent = `Registros — ${periodLabel}`;
-  document.getElementById('k1-red-s').textContent = r ? 'Red seleccionada' : '9 redes de salud registradas';
+  document.getElementById('k1-red-s').textContent = r ? 'Red seleccionada' : '9 redes + sin red asignada';
   document.getElementById('redbars-sub').textContent = r ? `Mostrando: ${r}` : 'Establecimientos asignados por red';
   document.getElementById('c10-sub').textContent = `Capacidad instalada — ${periodLabel}`;
 
@@ -1192,7 +1209,7 @@ function updateMod1() {
   /* ── INSIGHTS AUTOMÁTICOS MÓDULO 1 ── */
   const insights1 = [];
   if (r && redInfo[r]) {
-    insights1.push({icon:'info', text:`La red <b>${r}</b> agrupa <b>${redInfo[r].ipress}</b> establecimientos, equivalente al <b>${(redInfo[r].ipress/288*100).toFixed(1)}%</b> del total regional.`});
+    insights1.push({icon:'info', text:`La red <b>${r}</b> agrupa <b>${redInfo[r].ipress}</b> establecimientos, equivalente al <b>${(redInfo[r].ipress/5324*100).toFixed(1)}%</b> del total regional.`});
   } else {
     const topRed = [...redOrder].sort((x,y)=>redInfo[y].ipress-redInfo[x].ipress)[0];
     insights1.push({icon:'info', text:`<b>${topRed}</b> es la red con más establecimientos (<b>${redInfo[topRed].ipress}</b> IPRESS), concentrando la mayor capacidad operativa de la región.`});
@@ -1200,12 +1217,12 @@ function updateMod1() {
   const crecMed = ((personalMensual[2025].med.reduce((s,v)=>s+v,0) - personalMensual[2024].med.reduce((s,v)=>s+v,0)) / personalMensual[2024].med.reduce((s,v)=>s+v,0) * 100).toFixed(1);
   insights1.push({icon:'good', text:`El número de médicos creció <b>${crecMed}%</b> entre 2024 y 2025, lo que sugiere fortalecimiento progresivo de la capacidad asistencial.`});
   const catI = categoriaIpress.data[0]+categoriaIpress.data[1]+categoriaIpress.data[2]+categoriaIpress.data[3];
-  insights1.push({icon:'warn', text:`El <b>${(catI/288*100).toFixed(0)}%</b> de las IPRESS son de Nivel I (atención primaria), lo que indica baja proporción de establecimientos con mayor capacidad resolutiva.`});
+  insights1.push({icon:'warn', text:`El <b>${(catI/5324*100).toFixed(0)}%</b> de las IPRESS son de Nivel I (atención primaria), lo que indica baja proporción de establecimientos con mayor capacidad resolutiva.`});
   if (m) {
     const obsGrowth = growthData.find(d=>d.label==='Obstetrices').pct;
     insights1.push({icon: obsGrowth>15 ? 'good' : 'info', text:`El personal de obstetricia creció <b>${obsGrowth}%</b> entre 2024 y 2025, el mayor incremento relativo entre las categorías de personal de salud.`});
   } else {
-    insights1.push({icon:'info', text:`El sector <b>Gobierno Regional</b> opera el <b>${(sectorIpress.data[0]/288*100).toFixed(0)}%</b> de las IPRESS, evidenciando alta dependencia del sistema público.`});
+    insights1.push({icon:'info', text:`El sector <b>Gobierno Regional</b> opera el <b>${(sectorIpress.data[0]/5324*100).toFixed(0)}%</b> de las IPRESS, evidenciando alta dependencia del sistema público.`});
   }
   document.getElementById('insights1').innerHTML = insights1.map(i=>`
     <div class="insight-item"><div class="insight-icon ${i.icon}"><i class="ti ti-${i.icon==='warn'?'alert-triangle':i.icon==='alert'?'alert-circle':i.icon==='good'?'trending-up':'info-circle'}"></i></div><div class="insight-text">${i.text}</div></div>`).join('');
@@ -1298,13 +1315,13 @@ function updateMod2() {
 
   /* C16: gestantes por red (siempre muestra todas, resalta la seleccionada) */
   mkChart('c16',{ type:'bar',
-    data:{ labels:redOrder.map(rd=>rd.length>14?rd.substring(0,14)+'…':rd), datasets:[{ label:'Gestantes', data:redOrder.map(rd=>redInfo[rd].gestTotal),
-      backgroundColor:redOrder.map(rd=> rd===r ? '#0E7A60' : '#0E5A78'), borderRadius:5 }]},
+    data:{ labels:redOrderConSinRed.map(rd=>rd.length>14?rd.substring(0,14)+'…':rd), datasets:[{ label:'Gestantes', data:redOrderConSinRed.map(rd=>redInfo[rd].gestTotal),
+      backgroundColor:redOrderConSinRed.map(rd=> rd===r ? '#0E7A60' : '#0E5A78'), borderRadius:5 }]},
     options:{ indexAxis:'y', ...mkBaseOpts() }
   });
 
   /* C17: tasa de anemia severa por red (%) */
-  const sevRates = redOrder.map(rd => ({ n: rd.length>14?rd.substring(0,14)+'…':rd, full:rd, rate: +(redInfo[rd].sev/redInfo[rd].gestTotal*100).toFixed(2) }));
+  const sevRates = redOrderConSinRed.map(rd => ({ n: rd.length>14?rd.substring(0,14)+'…':rd, full:rd, rate: +(redInfo[rd].sev/redInfo[rd].gestTotal*100).toFixed(2) }));
   mkChart('c17',{ type:'bar',
     data:{ labels:sevRates.map(x=>x.n), datasets:[{ label:'Tasa severa (%)', data:sevRates.map(x=>x.rate),
       backgroundColor:sevRates.map(x=>x.full===r?'#0E7A60':'#B14A24'), borderRadius:5 }]},
@@ -1313,11 +1330,11 @@ function updateMod2() {
 
   /* C18: financiador x red (stacked) */
   mkChart('c18',{ type:'bar',
-    data:{ labels:redOrder.map(rd=>rd.length>12?rd.substring(0,12)+'…':rd),
+    data:{ labels:redOrderConSinRed.map(rd=>rd.length>12?rd.substring(0,12)+'…':rd),
       datasets:[
-        { label:'SIS', data:redOrder.map(rd=>redInfo[rd].sis), backgroundColor:'#0E5A78', stack:'s' },
-        { label:'Usuario', data:redOrder.map(rd=>redInfo[rd].usu), backgroundColor:'#5B7585', stack:'s' },
-        { label:'Otros', data:redOrder.map(rd=>redInfo[rd].otros), backgroundColor:'#0E7A60', stack:'s' }
+        { label:'SIS', data:redOrderConSinRed.map(rd=>redInfo[rd].sis), backgroundColor:'#0E5A78', stack:'s' },
+        { label:'Usuario', data:redOrderConSinRed.map(rd=>redInfo[rd].usu), backgroundColor:'#5B7585', stack:'s' },
+        { label:'Otros', data:redOrderConSinRed.map(rd=>redInfo[rd].otros), backgroundColor:'#0E7A60', stack:'s' }
       ]},
     options:{ ...mkBaseOpts(), scales:{ x:{...mkBaseOpts().scales.x, stacked:true}, y:{...mkBaseOpts().scales.y, stacked:true} } }
   });
@@ -1414,7 +1431,7 @@ function updateMod3() {
   mkChart('c12',{ type:'bar', data:{ labels:c12labels, datasets:c12ds }, options:{ ...mkBaseOpts({ callback:v=>fmtK(v) }) } });
 
   /* C19: niños CRED por red */
-  const ninosRedData = redOrder.map(rd => {
+  const ninosRedData = redOrderConSinRed.map(rd => {
     const i = redInfo[rd];
     let v;
     if (a==='2024') v = i.ninos2024; else if (a==='2025') v = i.ninos2025; else v = i.ninos2024+i.ninos2025;
@@ -1430,7 +1447,7 @@ function updateMod3() {
      controles por niño" (rango real de solo 9.68 a 10.23, sin variación visual
      útil) por el cambio porcentual interanual, que sí varía sustancialmente
      entre redes y permite identificar crecimiento o caída real de cobertura */
-  const varRedData = redOrder.map(rd => {
+  const varRedData = redOrderConSinRed.map(rd => {
     const i = redInfo[rd];
     const pct = i.ctrl2024>0 ? +(((i.ctrl2025-i.ctrl2024)/i.ctrl2024)*100).toFixed(1) : 0;
     return { n: rd.length>14?rd.substring(0,14)+'…':rd, full:rd, v: pct };
@@ -1443,9 +1460,9 @@ function updateMod3() {
 
   /* C21: comparativo controles por red 2024 vs 2025 */
   mkChart('c21',{ type:'bar',
-    data:{ labels:redOrder.map(rd=>rd.length>12?rd.substring(0,12)+'…':rd), datasets:[
-      { label:'2024', data:redOrder.map(rd=>redInfo[rd].ctrl2024), backgroundColor:'#0E5A78', borderRadius:5 },
-      { label:'2025', data:redOrder.map(rd=>redInfo[rd].ctrl2025), backgroundColor:'#0E7A60', borderRadius:5 }
+    data:{ labels:redOrderConSinRed.map(rd=>rd.length>12?rd.substring(0,12)+'…':rd), datasets:[
+      { label:'2024', data:redOrderConSinRed.map(rd=>redInfo[rd].ctrl2024), backgroundColor:'#0E5A78', borderRadius:5 },
+      { label:'2025', data:redOrderConSinRed.map(rd=>redInfo[rd].ctrl2025), backgroundColor:'#0E7A60', borderRadius:5 }
     ]},
     options:{ ...mkBaseOpts({ callback:v=>fmtK(v) }) }
   });
@@ -1489,7 +1506,7 @@ function updateHeaderStrip() {
   const gd = getGestantesData();
   const nd = getNinosData();
 
-  let ipressCount = 288;
+  let ipressCount = 5324;
   if (r && redInfo[r]) ipressCount = redInfo[r].ipress;
 
   const totalPersonal = pd.med + pd.enf + pd.obs + pd.nut;
@@ -1519,8 +1536,8 @@ function updateHeaderStrip() {
   items[4].querySelector('.hk-delta').textContent = pd.label.length>12 ? pd.label.substring(0,12) : pd.label;
   items[4].querySelector('.hk-label').textContent = 'Personal de salud activo';
 
-  items[5].querySelector('.hk-val').textContent = r ? '1' : '9';
-  items[5].querySelector('.hk-delta').textContent = r && redInfo[r] ? redInfo[r].micro + ' microred.' : '49 microred.';
+  items[5].querySelector('.hk-val').textContent = r ? '1' : '10';
+  items[5].querySelector('.hk-delta').textContent = r ? (redInfo[r].micro ? redInfo[r].micro+' microred.' : 'seleccionada') : '49 microred.';
   items[5].querySelector('.hk-label').textContent = 'Redes de salud';
 }
 
