@@ -1,0 +1,1600 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de Gestión Sanitaria — Región Junín</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  /* Color — paleta clínico-institucional, no semáforo genérico */
+  --ink-900: #0B2E45;        /* texto principal, marca */
+  --ink-700: #2C4A5E;
+  --ink-500: #5B7585;
+  --ink-300: #93A6B0;
+  --ink-100: #D8E1E6;
+
+  --surface: #F5F8FA;        /* fondo de página */
+  --card: #FFFFFF;           /* superficie de tarjeta */
+  --card-alt: #FAFCFD;
+
+  --line: rgba(11,46,69,0.08);
+  --line-strong: rgba(11,46,69,0.14);
+
+  --brand-700: #0E5A78;      /* azul-petróleo profundo — primario */
+  --brand-500: #1380A3;
+  --brand-300: #5FB2CC;
+  --brand-050: #E8F3F7;
+
+  --teal-600: #0E7A60;       /* salud / positivo */
+  --teal-050: #E6F5EF;
+
+  --amber-600: #B6700A;      /* moderado */
+  --amber-050: #FBF1DE;
+
+  --terra-600: #B14A24;      /* severo / atención clínica (no rojo semáforo) */
+  --terra-050: #FBECE4;
+
+  --violet-600: #5B4E9E;     /* segmentación adicional */
+  --violet-050: #EFECFA;
+
+  --magenta-600: #A23A6B;
+  --magenta-050: #FAEAF1;
+
+  --radius-card: 12px;
+  --radius-pill: 999px;
+  --radius-sm: 8px;
+
+  --shadow-ambient: 0 1px 2px rgba(11,46,69,0.04);
+  --shadow-key: 0 8px 24px -8px rgba(11,46,69,0.10), 0 2px 6px rgba(11,46,69,0.05);
+  --shadow-hover: 0 14px 32px -10px rgba(11,46,69,0.16), 0 3px 8px rgba(11,46,69,0.06);
+
+  --font-display: 'Manrope', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--surface);
+  color: var(--ink-900);
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  line-height: 1.5;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+:focus-visible { outline: 2px solid var(--brand-500); outline-offset: 2px; border-radius: 4px; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   GRID SYSTEM — 12 columnas
+═══════════════════════════════════════════════════════════════════ */
+.shell { max-width: 1440px; margin: 0 auto; padding: 0 28px; }
+.grid12 { display: grid; grid-template-columns: repeat(12, 1fr); gap: 18px; }
+.col-3  { grid-column: span 3; }
+.col-4  { grid-column: span 4; }
+.col-6  { grid-column: span 6; }
+.col-8  { grid-column: span 8; }
+.col-12 { grid-column: span 12; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   HEADER — dos niveles: marca/filtros + tira de indicadores globales
+═══════════════════════════════════════════════════════════════════ */
+.app-header { background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 300; }
+.header-top { display: flex; align-items: center; justify-content: space-between; padding: 16px 28px 14px; gap: 20px; max-width: 1440px; margin: 0 auto; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 13px; }
+.brand-mark {
+  width: 42px; height: 42px; border-radius: 11px;
+  background: linear-gradient(155deg, var(--brand-700) 0%, var(--ink-900) 100%);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 10px -3px rgba(14,90,120,0.45);
+  flex-shrink: 0;
+}
+.brand-mark i { color: #fff; font-size: 22px; }
+.brand-text .eyebrow { font-family: var(--font-body); font-size: 10.5px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--brand-500); margin-bottom: 1px; }
+.brand-text h1 { font-family: var(--font-display); font-size: 19px; font-weight: 800; color: var(--ink-900); letter-spacing: -0.01em; line-height: 1.15; }
+.brand-text .sub { font-size: 11.5px; color: var(--ink-500); margin-top: 2px; font-weight: 500; }
+
+.filter-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.filter-bar .fb-label { font-size: 10.5px; font-weight: 700; color: var(--ink-500); text-transform: uppercase; letter-spacing: .06em; margin-right: 2px; display:flex; align-items:center; gap:5px; }
+
+.pbi-select { position: relative; }
+.pbi-select select {
+  appearance: none; font-family: var(--font-body); font-size: 12.5px; font-weight: 600;
+  color: var(--ink-900); background: var(--card-alt); border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill); padding: 8px 32px 8px 14px; cursor: pointer; outline: none;
+  transition: border-color .15s, box-shadow .15s, background .15s;
+}
+.pbi-select::after {
+  content: '\ea5f'; font-family: 'tabler-icons' !important; position: absolute; right: 12px; top: 50%;
+  transform: translateY(-50%); font-size: 13px; color: var(--ink-500); pointer-events: none;
+}
+.pbi-select select:hover { border-color: var(--brand-300); background: #fff; }
+.pbi-select select:focus { border-color: var(--brand-500); box-shadow: 0 0 0 3px var(--brand-050); }
+.pbi-select select.is-active { border-color: var(--brand-500); background: var(--brand-050); color: var(--brand-700); }
+
+.filter-clear {
+  display: none; align-items: center; gap: 6px; font-size: 12px; font-weight: 700;
+  color: var(--brand-700); background: var(--brand-050); border: 1px solid var(--brand-300);
+  border-radius: var(--radius-pill); padding: 7px 12px 7px 13px; cursor: pointer; transition: all .15s;
+}
+.filter-clear.show { display: flex; }
+.filter-clear:hover { background: var(--brand-300); color: #fff; }
+.filter-clear i { font-size: 14px; }
+
+/* ── tira de indicadores globales ── */
+.header-kpi-strip {
+  border-top: 1px solid var(--line); background: var(--card-alt);
+  display: grid; grid-template-columns: repeat(6, 1fr);
+  max-width: 1440px; margin: 0 auto;
+}
+.hk-item { padding: 12px 22px; border-right: 1px solid var(--line); position: relative; }
+.hk-item:last-child { border-right: none; }
+.hk-top { display: flex; align-items: baseline; gap: 7px; }
+.hk-val { font-family: var(--font-display); font-size: 21px; font-weight: 800; color: var(--ink-900); letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+.hk-delta { font-size: 10.5px; font-weight: 700; padding: 1px 6px; border-radius: var(--radius-pill); }
+.hk-delta.up { background: var(--teal-050); color: var(--teal-600); }
+.hk-delta.down { background: var(--terra-050); color: var(--terra-600); }
+.hk-label { font-size: 10.5px; color: var(--ink-500); font-weight: 600; margin-top: 2px; }
+.hk-spark { position: absolute; right: 14px; bottom: 10px; opacity: .9; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   NAV TABS — estilo Power BI Service pages
+═══════════════════════════════════════════════════════════════════ */
+.tabs-row { background: var(--card); border-bottom: 1px solid var(--line); }
+.tabs-inner { max-width: 1440px; margin: 0 auto; padding: 0 28px; display: flex; gap: 4px; }
+.tab-btn {
+  font-family: var(--font-body); padding: 13px 6px; margin-right: 22px; font-size: 13px; font-weight: 700;
+  color: var(--ink-500); background: transparent; border: none; border-bottom: 2.5px solid transparent;
+  cursor: pointer; transition: color .15s, border-color .15s; display: flex; align-items: center; gap: 7px;
+}
+.tab-btn i { font-size: 16px; }
+.tab-btn:hover { color: var(--ink-900); }
+.tab-btn.active { color: var(--brand-700); border-bottom-color: var(--brand-700); }
+.tab-btn .tab-count { font-size: 10px; font-weight: 700; background: var(--ink-100); color: var(--ink-700); padding: 1px 7px; border-radius: var(--radius-pill); }
+.tab-btn.active .tab-count { background: var(--brand-050); color: var(--brand-700); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   MAIN / MODULES
+═══════════════════════════════════════════════════════════════════ */
+.main { padding: 28px 0 56px; }
+.module { display: none; }
+.module.active { display: block; animation: riseIn .3s ease; }
+@keyframes riseIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+.module-intro { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 22px; gap: 16px; flex-wrap: wrap; }
+.module-intro h2 { font-family: var(--font-display); font-size: 22px; font-weight: 800; color: var(--ink-900); letter-spacing: -0.01em; }
+.module-intro p { font-size: 13px; color: var(--ink-500); margin-top: 4px; font-weight: 500; }
+.module-tag { display: inline-flex; align-items: center; gap: 6px; background: var(--brand-050); color: var(--brand-700); font-size: 11px; font-weight: 700; padding: 5px 12px; border-radius: var(--radius-pill); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 8px; }
+.module-tag.teal { background: var(--teal-050); color: var(--teal-600); }
+.module-tag.violet { background: var(--violet-050); color: var(--violet-600); }
+
+/* ── module search ── */
+.search-shell { display: flex; align-items: center; gap: 10px; }
+.search-field { position: relative; flex: 1; max-width: 420px; }
+.search-field i.ti-search { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-size: 15px; color: var(--ink-300); }
+.search-field input {
+  width: 100%; font-family: var(--font-body); font-size: 13px; font-weight: 500;
+  padding: 9px 14px 9px 36px; border: 1px solid var(--line-strong); border-radius: var(--radius-pill);
+  background: var(--card); color: var(--ink-900); outline: none; transition: border-color .15s, box-shadow .15s;
+}
+.search-field input::placeholder { color: var(--ink-300); }
+.search-field input:focus { border-color: var(--brand-500); box-shadow: 0 0 0 3px var(--brand-050); }
+.search-results {
+  position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 150;
+  background: var(--card); border: 1px solid var(--line-strong); border-radius: var(--radius-card);
+  max-height: 220px; overflow-y: auto; box-shadow: var(--shadow-hover);
+}
+.sr-item { padding: 9px 14px; cursor: pointer; font-size: 12.5px; color: var(--ink-900); display: flex; justify-content: space-between; transition: background .1s; }
+.sr-item:hover { background: var(--brand-050); }
+.sr-item .sr-code { color: var(--ink-300); font-size: 11px; font-weight: 600; }
+.selected-pill {
+  display: inline-flex; align-items: center; gap: 7px; background: var(--brand-700); color: #fff;
+  border-radius: var(--radius-pill); padding: 7px 8px 7px 13px; font-size: 12px; font-weight: 700;
+}
+.selected-pill button { background: rgba(255,255,255,0.25); border: none; color: #fff; width: 18px; height: 18px; border-radius: 50%; cursor: pointer; font-size: 13px; line-height: 1; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   KPI CARDS
+═══════════════════════════════════════════════════════════════════ */
+.kpi-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-card);
+  padding: 18px 20px; box-shadow: var(--shadow-ambient); transition: box-shadow .2s, transform .2s;
+  position: relative; overflow: hidden;
+}
+.kpi-card:hover { box-shadow: var(--shadow-key); transform: translateY(-2px); }
+.kpi-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background: var(--accent, var(--brand-700)); }
+.kpi-icon-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.kpi-icon { width: 30px; height: 30px; border-radius: 9px; display: flex; align-items: center; justify-content: center; background: var(--accent-bg, var(--brand-050)); color: var(--accent, var(--brand-700)); }
+.kpi-icon i { font-size: 16px; }
+.kpi-card .kpi-val { font-family: var(--font-display); font-size: 28px; font-weight: 800; color: var(--ink-900); letter-spacing: -0.02em; line-height: 1; font-variant-numeric: tabular-nums; }
+.kpi-card .kpi-label { font-size: 11.5px; font-weight: 700; color: var(--ink-700); margin-top: 7px; text-transform: uppercase; letter-spacing: .03em; }
+.kpi-card .kpi-sub { font-size: 12px; color: var(--ink-500); margin-top: 3px; font-weight: 500; }
+
+.kpi-card.accent-blue   { --accent: var(--brand-700); --accent-bg: var(--brand-050); }
+.kpi-card.accent-teal   { --accent: var(--teal-600);  --accent-bg: var(--teal-050); }
+.kpi-card.accent-amber  { --accent: var(--amber-600); --accent-bg: var(--amber-050); }
+.kpi-card.accent-terra  { --accent: var(--terra-600); --accent-bg: var(--terra-050); }
+.kpi-card.accent-violet { --accent: var(--violet-600);--accent-bg: var(--violet-050); }
+.kpi-card.accent-magenta{ --accent: var(--magenta-600);--accent-bg: var(--magenta-050); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   INSIGHT PANEL
+═══════════════════════════════════════════════════════════════════ */
+.insight-card {
+  background: linear-gradient(165deg, var(--ink-900) 0%, var(--brand-700) 130%);
+  border-radius: var(--radius-card); padding: 20px 22px; color: #fff; position: relative; overflow: hidden;
+}
+.insight-card::after { content:''; position:absolute; right:-40px; top:-40px; width:160px; height:160px; border-radius:50%; background: radial-gradient(circle, rgba(255,255,255,0.08), transparent 70%); }
+.insight-head { display: flex; align-items: center; gap: 9px; margin-bottom: 14px; position: relative; z-index: 1; }
+.insight-head i { font-size: 18px; color: var(--brand-300); }
+.insight-head span { font-family: var(--font-display); font-size: 14px; font-weight: 700; }
+.insight-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px,1fr)); gap: 12px; position: relative; z-index: 1; }
+.insight-row { display: flex; gap: 10px; align-items: flex-start; }
+.insight-dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+.insight-dot.warn { background: var(--amber-600); box-shadow: 0 0 0 3px rgba(182,112,10,0.25); }
+.insight-dot.alert { background: #E8836B; box-shadow: 0 0 0 3px rgba(232,131,107,0.25); }
+.insight-dot.good { background: #4FD1A5; box-shadow: 0 0 0 3px rgba(79,209,165,0.25); }
+.insight-dot.info { background: var(--brand-300); box-shadow: 0 0 0 3px rgba(95,178,204,0.25); }
+.insight-row p { font-size: 12.5px; line-height: 1.5; color: rgba(255,255,255,0.88); }
+.insight-row p b { color: #fff; font-weight: 700; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   SECTION LABEL
+═══════════════════════════════════════════════════════════════════ */
+.section-label { display: flex; align-items: center; gap: 10px; margin: 28px 0 16px; }
+.section-label span { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-500); white-space: nowrap; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   CHART CARDS — masonry de 12 columnas
+═══════════════════════════════════════════════════════════════════ */
+.chart-grid { column-gap: 18px; column-count: 1; }
+@media (min-width: 720px)  { .chart-grid { column-count: 2; } }
+@media (min-width: 1180px) { .chart-grid { column-count: 3; } }
+.chart-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-card);
+  padding: 20px 22px; box-shadow: var(--shadow-ambient); break-inside: avoid; margin-bottom: 18px;
+  display: inline-block; width: 100%; transition: box-shadow .2s;
+}
+.chart-card:hover { box-shadow: var(--shadow-key); }
+.chart-card.full { column-span: all; }
+.chart-card-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 4px; gap: 10px; }
+.chart-title-wrap { display: flex; align-items: center; gap: 9px; }
+.chart-title-icon { width: 28px; height: 28px; border-radius: 8px; background: var(--brand-050); color: var(--brand-700); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.chart-title-icon i { font-size: 15px; }
+.chart-title { font-family: var(--font-display); font-size: 14.5px; font-weight: 700; color: var(--ink-900); }
+.chart-sub { font-size: 12px; color: var(--ink-500); margin: 6px 0 16px 37px; font-weight: 500; }
+.legend-row { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 12px; font-size: 12px; color: var(--ink-700); font-weight: 600; }
+.legend-dot { width: 9px; height: 9px; border-radius: 3px; display: inline-block; margin-right: 5px; vertical-align: middle; }
+
+/* ── progress bars list ── */
+.bar-block { margin: 9px 0; }
+.bar-label-row { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--ink-700); margin-bottom: 5px; font-weight: 600; }
+.bar-label-row .val { font-weight: 800; color: var(--ink-900); font-family: var(--font-display); }
+.bar-track { height: 7px; background: var(--surface); border-radius: var(--radius-pill); overflow: hidden; }
+.bar-fill { height: 100%; border-radius: var(--radius-pill); transition: width .7s cubic-bezier(.16,1,.3,1); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   FOOTER / FEEDBACK
+═══════════════════════════════════════════════════════════════════ */
+.feedback-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-card);
+  padding: 18px 22px; margin-top: 26px; display: flex; align-items: center; gap: 14px;
+}
+.feedback-card .fc-icon { width: 38px; height: 38px; border-radius: 10px; background: var(--brand-050); color: var(--brand-700); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.feedback-card .fc-icon i { font-size: 19px; }
+.feedback-card p { font-size: 12.5px; color: var(--ink-500); font-weight: 500; }
+.feedback-card p b { color: var(--ink-900); font-weight: 700; }
+.fc-actions { margin-left: auto; display: flex; gap: 8px; flex-shrink: 0; }
+.fc-btn { width: 34px; height: 34px; border-radius: 9px; border: 1px solid var(--line-strong); background: var(--card-alt); color: var(--ink-500); display:flex; align-items:center; justify-content:center; cursor:pointer; transition: all .15s; }
+.fc-btn:hover { background: var(--brand-050); color: var(--brand-700); border-color: var(--brand-300); }
+.fc-btn i { font-size: 16px; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 1000px) {
+  .col-3, .col-4 { grid-column: span 6; }
+  .header-kpi-strip { grid-template-columns: repeat(3, 1fr); }
+  .hk-item:nth-child(3) { border-right: none; }
+}
+@media (max-width: 700px) {
+  .shell { padding: 0 16px; }
+  .tabs-inner { padding: 0 16px; overflow-x: auto; }
+  .header-top { padding: 14px 16px; }
+  .header-kpi-strip { grid-template-columns: repeat(2, 1fr); }
+  .hk-item:nth-child(2n) { border-right: none; }
+  .col-3, .col-4, .col-6, .col-8 { grid-column: span 12; }
+  .module-intro { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+<!-- HEADER -->
+<header class="app-header">
+  <div class="header-top">
+    <div class="brand">
+      <div class="brand-mark"><i class="ti ti-heart-rate-monitor"></i></div>
+      <div class="brand-text">
+        <div class="eyebrow">DIRESA Junín · Gerencia Regional de Salud</div>
+        <h1>Panel de Gestión Sanitaria</h1>
+        <div class="sub">Recursos, salud materna e infantil — Periodo 2024–2025</div>
+      </div>
+    </div>
+    <div class="filter-bar">
+      <span class="fb-label"><i class="ti ti-adjustments-horizontal"></i>Filtros</span>
+      <div class="pbi-select">
+        <select id="selRed" onchange="applyFilters()">
+          <option value="">Todas las redes</option>
+          <option value="VALLE DEL MANTARO">Valle del Mantaro</option>
+          <option value="JAUJA">Jauja</option>
+          <option value="SATIPO">Satipo</option>
+          <option value="CHANCHAMAYO">Chanchamayo</option>
+          <option value="RED DE SALUD CHUPACA">Red de Salud Chupaca</option>
+          <option value="TARMA">Tarma</option>
+          <option value="SAN MARTIN DE PANGOA">San Martín de Pangoa</option>
+          <option value="JUNIN">Junín</option>
+          <option value="PICHANAKI">Pichanaki</option>
+          <option value="NO PERTENECE A NINGUNA RED">Sin red asignada</option>
+        </select>
+      </div>
+      <div class="pbi-select">
+        <select id="selAnio" onchange="applyFilters()">
+          <option value="">Todos los años</option>
+          <option value="2024">2024</option>
+          <option value="2025">2025</option>
+        </select>
+      </div>
+      <div class="pbi-select">
+        <select id="selMes" onchange="applyFilters()">
+          <option value="">Todos los meses</option>
+          <option value="1">Enero</option><option value="2">Febrero</option><option value="3">Marzo</option>
+          <option value="4">Abril</option><option value="5">Mayo</option><option value="6">Junio</option>
+          <option value="7">Julio</option><option value="8">Agosto</option><option value="9">Setiembre</option>
+          <option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option>
+        </select>
+      </div>
+      <button class="filter-clear" id="filterClearBtn" onclick="clearFilters()">
+        <i class="ti ti-x"></i><span id="filterClearText">Limpiar filtros</span>
+      </button>
+    </div>
+  </div>
+  <div class="header-kpi-strip" id="headerKpiStrip">
+    <div class="hk-item">
+      <div class="hk-top"><span class="hk-val">5,324</span><span class="hk-delta up">IPRESS</span></div>
+      <div class="hk-label">Establecimientos de salud</div>
+    </div>
+    <div class="hk-item">
+      <div class="hk-top"><span class="hk-val">3,457</span><span class="hk-delta down">0.9% severa</span></div>
+      <div class="hk-label">Gestantes con anemia</div>
+    </div>
+    <div class="hk-item">
+      <div class="hk-top"><span class="hk-val">19,686</span><span class="hk-delta up">9.9 / niño</span></div>
+      <div class="hk-label">Niños en control CRED</div>
+    </div>
+    <div class="hk-item">
+      <div class="hk-top"><span class="hk-val">195,611</span><span class="hk-delta up">2024–25</span></div>
+      <div class="hk-label">Controles realizados</div>
+    </div>
+    <div class="hk-item">
+      <div class="hk-top"><span class="hk-val">2,062K</span><span class="hk-delta up">+8.5%</span></div>
+      <div class="hk-label">Personal de salud activo</div>
+    </div>
+    <div class="hk-item">
+      <div class="hk-top"><span class="hk-val">10</span><span class="hk-delta up">49 microred.</span></div>
+      <div class="hk-label">Redes de salud</div>
+    </div>
+  </div>
+</header>
+
+<!-- NAV TABS -->
+<nav class="tabs-row">
+  <div class="tabs-inner">
+    <button class="tab-btn active" onclick="showTab('mod1',this)"><i class="ti ti-building-hospital"></i>Recursos de Salud<span class="tab-count">7</span></button>
+    <button class="tab-btn" onclick="showTab('mod2',this)"><i class="ti ti-heart"></i>Gestantes con Anemia<span class="tab-count">7</span></button>
+    <button class="tab-btn" onclick="showTab('mod3',this)"><i class="ti ti-baby-carriage"></i>Control CRED y Niños<span class="tab-count">7</span></button>
+  </div>
+</nav>
+
+<main class="main">
+<div class="shell">
+<section id="mod1" class="module active">
+  <div class="module-intro">
+    <div>
+      <span class="module-tag"><i class="ti ti-building-hospital"></i> Módulo 01</span>
+      <h2>Recursos de Salud</h2>
+      <p>Capacidad operativa: personal, categorías IPRESS, redes y microredes — Región Junín</p>
+    </div>
+    <div class="search-shell">
+      <div class="search-field">
+        <i class="ti ti-search"></i>
+        <input id="search1" type="text" placeholder="Buscar IPRESS por nombre o código…" oninput="modSearch(1,this.value)" autocomplete="off">
+        <div class="search-results" id="results1" style="display:none;"></div>
+      </div>
+      <span id="tag1" class="selected-pill" style="display:none;"></span>
+    </div>
+  </div>
+
+  <div class="grid12">
+    <div class="col-4 kpi-card accent-blue">
+      <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-building-hospital"></i></div></div>
+      <div class="kpi-val" id="k1-ipress">5,324</div>
+      <div class="kpi-label">Total IPRESS</div>
+      <div class="kpi-sub" id="k1-ipress-s">Establecimientos registrados</div>
+    </div>
+    <div class="col-4 kpi-card accent-teal">
+      <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-stethoscope"></i></div></div>
+      <div class="kpi-val" id="k1-med">1,413K</div>
+      <div class="kpi-label">Médicos</div>
+      <div class="kpi-sub" id="k1-med-s">Registros acumulados</div>
+    </div>
+    <div class="col-4 kpi-card accent-violet">
+      <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-nurse"></i></div></div>
+      <div class="kpi-val" id="k1-enf">1,332K</div>
+      <div class="kpi-label">Enfermeras</div>
+      <div class="kpi-sub" id="k1-enf-s">Registros acumulados</div>
+    </div>
+    <div class="col-4 kpi-card accent-amber">
+      <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-gender-female"></i></div></div>
+      <div class="kpi-val" id="k1-obs">315K</div>
+      <div class="kpi-label">Obstetrices</div>
+      <div class="kpi-sub" id="k1-obs-s">Registros acumulados</div>
+    </div>
+    <div class="col-4 kpi-card accent-terra">
+      <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-network"></i></div></div>
+      <div class="kpi-val" id="k1-red">10</div>
+      <div class="kpi-label">Redes de salud</div>
+      <div class="kpi-sub" id="k1-red-s">9 redes + sin red asignada</div>
+    </div>
+    <div class="col-4 kpi-card accent-magenta">
+      <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-sitemap"></i></div></div>
+      <div class="kpi-val" id="k1-micro">49</div>
+      <div class="kpi-label">Microredes</div>
+      <div class="kpi-sub">Unidades operativas</div>
+    </div>
+
+    <div class="col-12 insight-card">
+      <div class="insight-head"><i class="ti ti-bulb"></i><span>Análisis automático — Recursos de Salud</span></div>
+      <div class="insight-list" id="insights1"></div>
+    </div>
+  </div>
+
+  <div class="section-label"><span>Análisis de establecimientos y personal</span></div>
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="chart-card-head"><div class="chart-title-wrap"><div class="chart-title-icon"><i class="ti ti-chart-bar"></i></div><div class="chart-title">IPRESS por categoría</div></div></div>
+      <div class="chart-sub">Distribución según nivel de complejidad</div>
+      <div style="position:relative;width:100%;height:250px;"><canvas id="c1"></canvas></div>
+      <div class="legend-row"><span><span class="legend-dot" style="background:#0E5A78"></span>Nivel I</span><span><span class="legend-dot" style="background:#0E7A60"></span>Nivel II</span><span><span class="legend-dot" style="background:#5B4E9E"></span>Nivel III</span></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-card-head"><div class="chart-title-wrap"><div class="chart-title-icon"><i class="ti ti-chart-donut"></i></div><div class="chart-title">IPRESS por sector</div></div></div>
+      <div class="chart-sub">Gobierno regional, privado, EsSalud, MINSA y otros</div>
+      <div style="position:relative;width:100%;height:250px;"><canvas id="c2"></canvas></div>
+      <div class="legend-row" id="leg2"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-card-head"><div class="chart-title-wrap"><div class="chart-title-icon"><i class="ti ti-network"></i></div><div class="chart-title">IPRESS por red de salud</div></div></div>
+      <div class="chart-sub" id="redbars-sub">Establecimientos asignados por red</div>
+      <div id="redBars"></div>
+    </div>
+    <div class="chart-card full">
+      <div class="chart-card-head"><div class="chart-title-wrap"><div class="chart-title-icon"><i class="ti ti-users"></i></div><div class="chart-title">Personal de salud — <span id="c3-title">2024 vs 2025</span></div></div></div>
+      <div class="chart-sub">Registros acumulados de personal por tipo y periodo</div>
+      <div style="position:relative;width:100%;height:230px;"><canvas id="c3"></canvas></div>
+      <div class="legend-row"><span><span class="legend-dot" style="background:#0E5A78"></span>Médicos</span><span><span class="legend-dot" style="background:#0E7A60"></span>Enfermeras</span><span><span class="legend-dot" style="background:#B6700A"></span>Obstetrices</span><span><span class="legend-dot" style="background:#5B4E9E"></span>Nutricionistas</span></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-card-head"><div class="chart-title-wrap"><div class="chart-title-icon"><i class="ti ti-chart-pie-2"></i></div><div class="chart-title">Composición del personal de salud</div></div></div>
+      <div class="chart-sub" id="c10-sub">Distribución porcentual por tipo de profesional — 2024–25</div>
+      <div style="position:relative;width:100%;height:230px;"><canvas id="c10"></canvas></div>
+      <div class="legend-row" id="leg10"></div>
+    </div>
+    <div class="chart-card full">
+      <div class="chart-card-head"><div class="chart-title-wrap"><div class="chart-title-icon"><i class="ti ti-chart-line"></i></div><div class="chart-title">Tendencia mensual de personal — médicos y enfermeras</div></div></div>
+      <div class="chart-sub">Evolución mes a mes para identificar variaciones de dotación de personal</div>
+      <div style="position:relative;width:100%;height:230px;"><canvas id="c13"></canvas></div>
+      <div class="legend-row" id="leg13"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-card-head"><div class="chart-title-wrap"><div class="chart-title-icon"><i class="ti ti-chart-radar"></i></div><div class="chart-title">Composición de personal por red (top 5)</div></div></div>
+      <div class="chart-sub">Comparación proporcional de los tipos de personal en las redes con más establecimientos</div>
+      <div style="position:relative;width:100%;height:260px;"><canvas id="c14"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-card-head"><div class="chart-title-wrap"><div class="chart-title-icon"><i class="ti ti-trending-up"></i></div><div class="chart-title">Crecimiento interanual de personal</div></div></div>
+      <div class="chart-sub">Variación porcentual 2024 → 2025 por tipo de profesional</div>
+      <div style="position:relative;width:100%;height:260px;"><canvas id="c15"></canvas></div>
+    </div>
+  </div>
+</section>
+<section id="mod2" class="module">
+  <div class="module-intro">
+    <div>
+      <span class="module-tag teal"><i class="ti ti-heart"></i> Módulo 02</span>
+      <h2>Gestantes con Anemia</h2>
+      <p>Análisis epidemiológico: nivel de anemia, estado nutricional, financiador y distribución territorial</p>
+    </div>
+    <div class="search-shell">
+      <div class="search-field">
+        <i class="ti ti-search"></i>
+        <input id="search2" type="text" placeholder="Buscar por distrito…" oninput="modSearch(2,this.value)" autocomplete="off">
+        <div class="search-results" id="results2" style="display:none;"></div>
+      </div>
+      <span id="tag2" class="selected-pill" style="display:none;"></span>
+    </div>
+  </div>
+
+  <div class="grid12">
+    <div class="col-4 kpi-card accent-terra">
+      <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-heart"></i></div></div>
+      <div class="kpi-val" id="k2-total">3,457</div>
+      <div class="kpi-label">Total gestantes</div>
+      <div class="kpi-sub" id="k2-total-s">Con diagnóstico de anemia</div>
+    </div>
+    <div class="col-4 kpi-card accent-amber">
+      <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-alert-triangle"></i></div></div>
+      <div class="kpi-val" id="k2-leve">2,313</div>
+      <div class="kpi-label">Anemia leve</div>
+      <div class="kpi-sub" id="k2-leve-p">66.9% del total</div>
+    </div>
+    <div class="col-4 kpi-card accent-magenta">
+      <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-alert-circle"></i></div></div>
+      <div class="kpi-val" id="k2-mod">1,113</div>
+      <div class="kpi-label">Anemia moderada</div>
+      <div class="kpi-sub" id="k2-mod-p">32.2% del total</div>
+    </div>
+    <div class="col-4 kpi-card accent-terra">
+      <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-circle-x"></i></div></div>
+      <div class="kpi-val" id="k2-sev">31</div>
+      <div class="kpi-label">Anemia severa</div>
+      <div class="kpi-sub" id="k2-sev-p">0.9% del total</div>
+    </div>
+    <div class="col-4 kpi-card accent-teal">
+      <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-check"></i></div></div>
+      <div class="kpi-val" id="k2-norm">2,359</div>
+      <div class="kpi-label">Nutr. normal</div>
+      <div class="kpi-sub" id="k2-norm-p">68.2% del total</div>
+    </div>
+    <div class="col-4 kpi-card accent-blue">
+      <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-id-badge"></i></div></div>
+      <div class="kpi-val" id="k2-sis">2,821</div>
+      <div class="kpi-label">Afiliadas SIS</div>
+      <div class="kpi-sub" id="k2-sis-p">81.6% del total</div>
+    </div>
+
+    <div class="col-12 insight-card">
+      <div class="insight-head"><i class="ti ti-bulb"></i><span>Análisis automático — Gestantes con Anemia</span></div>
+      <div class="insight-list" id="insights2"></div>
+    </div>
+  </div>
+
+  <div class="section-label"><span>Análisis de factores asociados</span></div>
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="chart-card-head"><div class="chart-title-wrap"><div class="chart-title-icon"><i class="ti ti-chart-donut"></i></div><div class="chart-title">Nivel de anemia</div></div></div>
+      <div class="chart-sub">Clasificación clínica de severidad</div>
+      <div style="position:relative;width:100%;height:240px;"><canvas id="c4"></canvas></div>
+      <div class="legend-row"><span><span class="legend-dot" style="background:#EFA53D"></span>Leve</span><span><span class="legend-dot" style="background:#C75A33"></span>Moderada</span><span><span class="legend-dot" style="background:#B14A24"></span>Severa</span></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-card-head"><div class="chart-title-wrap"><div class="chart-title-icon"><i class="ti ti-chart-bar"></i></div><div class="chart-title">Estado nutricional</div></div></div>
+      <div class="chart-sub">Clasificación nutricional pregestacional</div>
+      <div style="position:relative;width:100%;height:240px;"><canvas id="c5"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-card-head"><div class="chart-title-wrap"><div class="chart-title-icon"><i class="ti ti-id-badge-2"></i></div><div class="chart-title">Tipo de financiador</div></div></div>
+      <div class="chart-sub">Cobertura por tipo de aseguramiento</div>
+      <div style="position:relative;width:100%;height:240px;"><canvas id="c6"></canvas></div>
+      <div class="legend-row" id="leg6"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-card-head"><div class="chart-title-wrap"><div class="chart-title-icon"><i class="ti ti-map-pin"></i></div><div class="chart-title">Top distritos — gestantes</div></div></div>
+      <div class="chart-sub" id="dist-sub">Concentración territorial, Departamento Junín</div>
+      <div id="distritoBars" style="margin-top:6px;"></div>
+    </div>
+    <div class="chart-card full">
+      <div class="chart-card-head"><div class="chart-title-wrap"><div class="chart-title-icon"><i class="ti ti-chart-bar"></i></div><div class="chart-title">Cruce: nivel de anemia × estado nutricional</div></div></div>
+      <div class="chart-sub">Distribución de severidad según clasificación nutricional</div>
+      <div style="position:relative;width:100%;height:220px;"><canvas id="c11"></canvas></div>
+      <div class="legend-row"><span><span class="legend-dot" style="background:#EFA53D"></span>Leve</span><span><span class="legend-dot" style="background:#C75A33"></span>Moderada</span><span><span class="legend-dot" style="background:#B14A24"></span>Severa</span></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-card-head"><div class="chart-title-wrap"><div class="chart-title-icon"><i class="ti ti-network"></i></div><div class="chart-title">Gestantes por red de salud</div></div></div>
+      <div class="chart-sub">Volumen de casos atendidos según red asignada</div>
+      <div style="position:relative;width:100%;height:260px;"><canvas id="c16"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-card-head"><div class="chart-title-wrap"><div class="chart-title-icon"><i class="ti ti-percentage"></i></div><div class="chart-title">Tasa de anemia severa por red</div></div></div>
+      <div class="chart-sub">Proporción de casos severos respecto al total de cada red</div>
+      <div style="position:relative;width:100%;height:260px;"><canvas id="c17"></canvas></div>
+    </div>
+    <div class="chart-card full">
+      <div class="chart-card-head"><div class="chart-title-wrap"><div class="chart-title-icon"><i class="ti ti-stack-2"></i></div><div class="chart-title">Financiador × red de salud</div></div></div>
+      <div class="chart-sub">Distribución del tipo de seguro en cada red de salud</div>
+      <div style="position:relative;width:100%;height:240px;"><canvas id="c18"></canvas></div>
+      <div class="legend-row"><span><span class="legend-dot" style="background:#0E5A78"></span>SIS</span><span><span class="legend-dot" style="background:#5B7585"></span>Usuario</span><span><span class="legend-dot" style="background:#0E7A60"></span>Otros</span></div>
+    </div>
+  </div>
+</section>
+<section id="mod3" class="module">
+  <div class="module-intro">
+    <div>
+      <span class="module-tag violet"><i class="ti ti-baby-carriage"></i> Módulo 03</span>
+      <h2>Control CRED y Niños</h2>
+      <p>Seguimiento de controles de crecimiento y desarrollo infantil — 2024–2025</p>
+    </div>
+    <div class="search-shell">
+      <div class="search-field">
+        <i class="ti ti-search"></i>
+        <input id="search3" type="text" placeholder="Buscar por IPRESS de atención…" oninput="modSearch(3,this.value)" autocomplete="off">
+        <div class="search-results" id="results3" style="display:none;"></div>
+      </div>
+      <span id="tag3" class="selected-pill" style="display:none;"></span>
+    </div>
+  </div>
+
+  <div class="grid12">
+    <div class="col-4 kpi-card accent-blue">
+      <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-baby-carriage"></i></div></div>
+      <div class="kpi-val" id="k3-ninos">19,686</div>
+      <div class="kpi-label">Total niños CRED</div>
+      <div class="kpi-sub" id="k3-ninos-s">Registros activos</div>
+    </div>
+    <div class="col-4 kpi-card accent-teal">
+      <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-list-check"></i></div></div>
+      <div class="kpi-val" id="k3-ctrl">195,611</div>
+      <div class="kpi-label">Total controles</div>
+      <div class="kpi-sub" id="k3-ctrl-s">Controles realizados</div>
+    </div>
+    <div class="col-4 kpi-card accent-violet">
+      <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-gender-male"></i></div></div>
+      <div class="kpi-val" id="k3-m">10,042</div>
+      <div class="kpi-label">Niños (M)</div>
+      <div class="kpi-sub" id="k3-ms">99,826 controles</div>
+    </div>
+    <div class="col-4 kpi-card accent-magenta">
+      <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-gender-female"></i></div></div>
+      <div class="kpi-val" id="k3-f">9,644</div>
+      <div class="kpi-label">Niñas (F)</div>
+      <div class="kpi-sub" id="k3-fs">95,785 controles</div>
+    </div>
+    <div class="col-4 kpi-card accent-amber">
+      <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-trending-up"></i></div></div>
+      <div class="kpi-val" id="k3-prom">9.9</div>
+      <div class="kpi-label">Promedio / niño</div>
+      <div class="kpi-sub">Controles por niño</div>
+    </div>
+    <div class="col-4 kpi-card accent-teal">
+      <div class="kpi-icon-row"><div class="kpi-icon"><i class="ti ti-calendar-stats"></i></div></div>
+      <div class="kpi-val" id="k3-pico">10,380</div>
+      <div class="kpi-label">Pico mensual</div>
+      <div class="kpi-sub" id="k3-pico-s">Marzo 2025</div>
+    </div>
+
+    <div class="col-12 insight-card">
+      <div class="insight-head"><i class="ti ti-bulb"></i><span>Análisis automático — Control CRED y Niños</span></div>
+      <div class="insight-list" id="insights3"></div>
+    </div>
+  </div>
+
+  <div class="section-label"><span>Seguimiento y distribución de controles</span></div>
+  <div class="chart-grid">
+    <div class="chart-card full">
+      <div class="chart-card-head"><div class="chart-title-wrap"><div class="chart-title-icon"><i class="ti ti-chart-line"></i></div><div class="chart-title">Tendencia mensual de controles CRED — <span id="c7-title">2024 y 2025</span></div></div></div>
+      <div class="chart-sub">Evolución del número de controles por mes con comparativo interanual</div>
+      <div style="position:relative;width:100%;height:250px;"><canvas id="c7"></canvas></div>
+      <div class="legend-row" id="leg7"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-card-head"><div class="chart-title-wrap"><div class="chart-title-icon"><i class="ti ti-gender-bigender"></i></div><div class="chart-title">Controles por sexo</div></div></div>
+      <div class="chart-sub">Distribución de atenciones registradas</div>
+      <div style="position:relative;width:100%;height:210px;"><canvas id="c8"></canvas></div>
+      <div class="legend-row"><span><span class="legend-dot" style="background:#0E5A78"></span>Masculino</span><span><span class="legend-dot" style="background:#A23A6B"></span>Femenino</span></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-card-head"><div class="chart-title-wrap"><div class="chart-title-icon"><i class="ti ti-users-group"></i></div><div class="chart-title">Médicos por establecimiento, por red</div></div></div>
+      <div class="chart-sub">Concentración relativa de personal médico — identifica redes sub-dotadas</div>
+      <div style="position:relative;width:100%;height:210px;"><canvas id="c9"></canvas></div>
+    </div>
+    <div class="chart-card full">
+      <div class="chart-card-head"><div class="chart-title-wrap"><div class="chart-title-icon"><i class="ti ti-chart-bar"></i></div><div class="chart-title">Controles por trimestre — <span id="c12-title">2024 y 2025</span></div></div></div>
+      <div class="chart-sub">Agrupación trimestral para identificar estacionalidad</div>
+      <div style="position:relative;width:100%;height:220px;"><canvas id="c12"></canvas></div>
+      <div class="legend-row"><span><span class="legend-dot" style="background:#0E5A78"></span>2024</span><span><span class="legend-dot" style="background:#0E7A60"></span>2025</span></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-card-head"><div class="chart-title-wrap"><div class="chart-title-icon"><i class="ti ti-network"></i></div><div class="chart-title">Niños CRED por red de salud</div></div></div>
+      <div class="chart-sub">Distribución de registros infantiles por red</div>
+      <div style="position:relative;width:100%;height:260px;"><canvas id="c19"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-card-head"><div class="chart-title-wrap"><div class="chart-title-icon"><i class="ti ti-trending-up"></i></div><div class="chart-title">Variación de controles por red (%)</div></div></div>
+      <div class="chart-sub">Cambio porcentual interanual 2024 → 2025, por red de salud</div>
+      <div style="position:relative;width:100%;height:300px;"><canvas id="c20"></canvas></div>
+    </div>
+    <div class="chart-card full">
+      <div class="chart-card-head"><div class="chart-title-wrap"><div class="chart-title-icon"><i class="ti ti-chart-area"></i></div><div class="chart-title">Comparativo de controles por red — 2024 vs 2025</div></div></div>
+      <div class="chart-sub">Variación interanual del volumen de controles en cada red de salud</div>
+      <div style="position:relative;width:100%;height:240px;"><canvas id="c21"></canvas></div>
+      <div class="legend-row"><span><span class="legend-dot" style="background:#0E5A78"></span>2024</span><span><span class="legend-dot" style="background:#0E7A60"></span>2025</span></div>
+    </div>
+  </div>
+
+  <div class="feedback-card">
+    <div class="fc-icon"><i class="ti ti-message-2-star"></i></div>
+    <p><b>¿Esta vista te resultó útil?</b> Tu retroalimentación ayuda a mejorar la precisión y utilidad de este panel para la toma de decisiones en salud pública.</p>
+    <div class="fc-actions">
+      <button class="fc-btn"><i class="ti ti-thumb-up"></i></button>
+      <button class="fc-btn"><i class="ti ti-thumb-down"></i></button>
+    </div>
+  </div>
+</section>
+</div>
+</main>
+<script>
+const mesesNombres = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Set','Oct','Nov','Dic'];
+
+/* --- PERSONAL MENSUAL REAL (REGISTRO_MENSUAL) --- */
+const personalMensual = {
+  2024: {
+    med:[54393,54196,54596,60976,54837,54866,55094,55606,55908,56537,56939,57478],
+    enf:[51648,51692,51657,51803,51808,52022,52389,52705,53289,53618,53488,54495],
+    obs:[11815,11696,11728,11739,11627,11766,12052,11868,11899,11887,12031,12379],
+    nut:[2210,2231,2231,2237,2238,2264,2292,2315,2313,2336,2377,2433],
+    con:[26377,26287,26441,26525,26166,26332,26802,48648,48590,48564,49525,49383]
+  },
+  2025: {
+    med:[61065,61016,61104,61077,62635,62161,61114,61224,61641,62071,62737,63673],
+    enf:[58611,57645,57819,58652,59206,59148,59155,58418,57560,58108,58444,58257],
+    obs:[14038,13938,13795,14042,14328,14461,14273,14119,14069,14283,16850,14574],
+    nut:[2702,2725,2687,2783,2775,2861,2879,2848,2757,2785,2799,2815],
+    con:[31650,32218,31874,31969,32213,31952,32485,42535,32970,33320,33370,43678]
+  }
+};
+
+/* --- CRED MENSUAL REAL --- */
+const credData = {
+  2024: [1325,8015,9480,8718,9208,9200,8721,8267,9296,8832,9009,8716],
+  2025: [9846,8982,10380,9860,9205,8447,7588,7546,6782,6718,5656,5814]
+};
+
+/* --- TRIMESTRAL REAL (suma de credData) --- */
+const trimData = { 2024:[18820,27126,26284,26557], 2025:[29208,27512,21916,18277] };
+
+/* --- IPRESS POR CATEGORÍA (estático, no varía por año) --- */
+const categoriaIpress = { labels:['I-1','I-2','I-3','I-4','II-E','II-1','II-2','III-1','III-2','III-E'], data:[2204,1177,929,314,267,233,87,34,14,12] };
+
+/* --- IPRESS POR SECTOR (estático) --- */
+const sectorIpress = { labels:['Gob. Regional','Privado','EsSalud','MINSA','PNP','Ejército','Otro'],
+  data:[4327,537,232,104,82,23,19], colors:['#0E5A78','#0E7A60','#5B4E9E','#B6700A','#C75A33','#A23A6B','#5B7585'] };
+
+/* --- DATOS REALES POR RED DE SALUD --- */
+const redInfo = {
+  'VALLE DEL MANTARO':      { ipress:81, med:3555, enf:7754, obs:5401,
+                               gestTotal:1801, leve:1227, mod:562, sev:12, norm:1275, sobr:405, obes:121, sis:1399, usu:384, otros:18,
+                               ninos2024:2979, ninos2025:3107, ctrl2024:30078, ctrl2025:29662 },
+  'JAUJA':                  { ipress:42, med:8395, enf:13439, obs:6691,
+                               gestTotal:504, leve:301, mod:196, sev:7, norm:316, sobr:147, obes:41, sis:462, usu:38, otros:4,
+                               ninos2024:1562, ninos2025:1615, ctrl2024:16397, ctrl2025:15691 },
+  'SATIPO':                 { ipress:56, med:1418, enf:2323, obs:2007,
+                               gestTotal:223, leve:158, mod:64, sev:1, norm:176, sobr:29, obes:18, sis:151, usu:60, otros:12,
+                               ninos2024:906, ninos2025:939, ctrl2024:9162, ctrl2025:9047 },
+  'CHANCHAMAYO':             { ipress:21, med:1048, enf:1689, obs:1426,
+                               gestTotal:217, leve:144, mod:73, sev:0, norm:122, sobr:70, obes:25, sis:204, usu:12, otros:1,
+                               ninos2024:417, ninos2025:455, ctrl2024:4434, ctrl2025:4432 },
+  'RED DE SALUD CHUPACA':    { ipress:20, med:661, enf:1494, obs:1018,
+                               gestTotal:198, leve:133, mod:63, sev:2, norm:129, sobr:54, obes:15, sis:186, usu:10, otros:2,
+                               ninos2024:210, ninos2025:179, ctrl2024:2048, ctrl2025:1741 },
+  'TARMA':                   { ipress:30, med:630, enf:1206, obs:1010,
+                               gestTotal:58, leve:50, mod:8, sev:0, norm:34, sobr:18, obes:6, sis:50, usu:8, otros:0,
+                               ninos2024:382, ninos2025:404, ctrl2024:4029, ctrl2025:3928 },
+  'SAN MARTIN DE PANGOA':    { ipress:15, med:232, enf:464, obs:479,
+                               gestTotal:63, leve:51, mod:12, sev:0, norm:58, sobr:3, obes:2, sis:57, usu:6, otros:0,
+                               ninos2024:363, ninos2025:435, ctrl2024:3544, ctrl2025:4179 },
+  'JUNIN':                   { ipress:9, med:198, enf:449, obs:284,
+                               gestTotal:49, leve:25, mod:24, sev:0, norm:34, sobr:8, obes:7, sis:44, usu:5, otros:0,
+                               ninos2024:85, ninos2025:77, ctrl2024:894, ctrl2025:760 },
+  'PICHANAKI':                { ipress:14, med:298, enf:321, obs:360,
+                               gestTotal:19, leve:12, mod:7, sev:0, norm:15, sobr:3, obes:1, sis:18, usu:1, otros:0,
+                               ninos2024:159, ninos2025:119, ctrl2024:1670, ctrl2025:1175 },
+  'NO PERTENECE A NINGUNA RED': { ipress:5036, med:1396509, enf:1302498, obs:296581,
+                               gestTotal:325, leve:212, mod:104, sev:9, norm:200, sobr:89, obes:36, sis:250, usu:71, otros:4,
+                               ninos2024:2583, ninos2025:2710, ctrl2024:26531, ctrl2025:26209 }
+};
+const redOrder = ['VALLE DEL MANTARO','JAUJA','SATIPO','CHANCHAMAYO','RED DE SALUD CHUPACA','TARMA','SAN MARTIN DE PANGOA','JUNIN','PICHANAKI'];
+const redOrderConSinRed = ['NO PERTENECE A NINGUNA RED', ...redOrder];
+
+/* --- TOTALES GLOBALES (sin filtro) --- */
+const totalesGlobales = {
+  ipress: 5324, redes: 10, microredes: 49,
+  med: 1412944, enf: 1331637, obs: 315257, nut: 60893,
+  gestTotal: 3457, leve:2313, mod:1113, sev:31, norm:2359, sobr:826, obes:272, sis:2821, usu:595, otros:35,
+  ninos:19686, ctrl:195611, ninosM:10042, ninosF:9644, ctrlM:99826, ctrlF:95785,
+  consultTotal:839874, consultFunc:452000
+};
+
+/* --- DISTRITOS reales con desagregación por red --- */
+const distritosDB = [
+  {n:'Huancayo', red:'VALLE DEL MANTARO', v:296},
+  {n:'Huancayo', red:'NO PERTENECE A NINGUNA RED', v:325},
+  {n:'Chilca', red:'VALLE DEL MANTARO', v:288},
+  {n:'El Tambo', red:'VALLE DEL MANTARO', v:273},
+  {n:'Perené', red:'CHANCHAMAYO', v:131},
+  {n:'Tarma', red:'JAUJA', v:129},
+  {n:'Chupaca', red:'RED DE SALUD CHUPACA', v:126},
+  {n:'Concepción', red:'VALLE DEL MANTARO', v:119},
+  {n:'Huancán', red:'VALLE DEL MANTARO', v:114},
+  {n:'Sapallanga', red:'VALLE DEL MANTARO', v:105},
+  {n:'Río Tambo', red:'SATIPO', v:103},
+  {n:'Sicaya', red:'VALLE DEL MANTARO', v:99},
+  {n:'Pilcomayo', red:'VALLE DEL MANTARO', v:81},
+  {n:'Mazamari', red:'SATIPO', v:79},
+  {n:'San Ramón', red:'CHANCHAMAYO', v:74},
+  {n:'Pangoa', red:'SAN MARTIN DE PANGOA', v:62},
+  {n:'Huayucachi', red:'VALLE DEL MANTARO', v:57},
+  {n:'Carhuamayo', red:'JUNIN', v:38},
+  {n:'Orcotuna', red:'VALLE DEL MANTARO', v:37},
+  {n:'Jauja', red:'JAUJA', v:26},
+];
+
+/* --- IPRESS reales (nombres del modelo) para búsqueda módulos 1 y 3 --- */
+const ipressDB = [
+  {n:'C.S. Chilca', cod:'CS-40231', red:'VALLE DEL MANTARO'},
+  {n:'P.S. Huancayo Centro', cod:'PS-40012', red:'VALLE DEL MANTARO'},
+  {n:'C.S. El Tambo', cod:'CS-40087', red:'VALLE DEL MANTARO'},
+  {n:'P.S. Sapallanga', cod:'PS-40154', red:'VALLE DEL MANTARO'},
+  {n:'C.S. Sicaya', cod:'CS-40098', red:'VALLE DEL MANTARO'},
+  {n:'C.S. Chupaca', cod:'CS-41010', red:'RED DE SALUD CHUPACA'},
+  {n:'P.S. Concepción', cod:'PS-40310', red:'VALLE DEL MANTARO'},
+  {n:'C.S. Tarma', cod:'CS-42010', red:'TARMA'},
+  {n:'C.S. Perené', cod:'CS-43005', red:'CHANCHAMAYO'},
+  {n:'P.S. Pangoa', cod:'PS-44001', red:'SAN MARTIN DE PANGOA'},
+  {n:'P.S. Huancán', cod:'PS-40167', red:'VALLE DEL MANTARO'},
+  {n:'P.S. Jauja', cod:'PS-40410', red:'JAUJA'},
+  {n:'C.S. San Ramón', cod:'CS-43015', red:'CHANCHAMAYO'},
+  {n:'P.S. La Oroya', cod:'PS-45002', red:'JUNIN'},
+  {n:'C.S. Satipo', cod:'CS-46001', red:'SATIPO'},
+  {n:'P.S. Pichanaki', cod:'PS-47002', red:'PICHANAKI'},
+  {n:'C.S. Mazamari', cod:'CS-46020', red:'SATIPO'},
+  {n:'C.S. Junín', cod:'CS-45010', red:'JUNIN'},
+  {n:'P.S. Yanabamba', cod:'PS-88001', red:'TARMA'},
+  {n:'P.S. Valle Hermoso', cod:'PS-40471', red:'RED DE SALUD CHUPACA'},
+  {n:'P.S. Zona Patria', cod:'PS-40658', red:'TARMA'},
+];
+
+/* ═══════════════════════════════════════════════════════════════════
+   ESTADO GLOBAL DE FILTROS
+═══════════════════════════════════════════════════════════════════ */
+let state = { anio:'', mes:'', red:'', ipress1:null, ipress3:null, distrito:null };
+let charts = {};
+const GC = '#E3EAEE', TC = '#5B7585';
+
+function mkBaseOpts(extraY) {
+  return {
+    responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false}, tooltip:{ mode:'index', intersect:false, titleFont:{family:'Inter'}, bodyFont:{family:'Inter'} } },
+    scales:{
+      x:{ grid:{color:GC}, ticks:{color:TC, font:{family:'Inter',size:11}} },
+      y:{ grid:{color:GC}, ticks:{color:TC, font:{family:'Inter',size:11}, ...(extraY||{}) } }
+    }
+  };
+}
+function mkChart(id, cfg) {
+  if(charts[id]) charts[id].destroy();
+  const el = document.getElementById(id);
+  if(!el) return;
+  charts[id] = new Chart(el, cfg);
+}
+function fmtK(v) {
+  if (v === null || v === undefined || isNaN(v)) return '0';
+  const av = Math.abs(v);
+  if (av >= 100000) return (v/1000).toFixed(0)+'K';
+  if (av >= 10000)  return (v/1000).toFixed(1)+'K';
+  return Math.round(v).toLocaleString();
+}
+/* ═══════════════════════════════════════════════════════════════════
+   RESOLUCIÓN DE DATOS SEGÚN FILTROS (fuente única de verdad)
+   Corrige: meses vacíos/repetidos, red sin cambios.
+═══════════════════════════════════════════════════════════════════ */
+function getPersonalData() {
+  // Devuelve {med,enf,obs,nut,con} resolviendo año + mes + red correctamente
+  const a = state.anio, m = state.mes ? parseInt(state.mes) : null, r = state.red;
+
+  if (r && redInfo[r]) {
+    // Cuando hay red: partimos de los totales reales de esa red (no varían por mes,
+    // pero si hay año podemos prorratear 2024/2025 con la proporción global real)
+    const info = redInfo[r];
+    const yearFactor2024 = totalesGlobales.med ? (personalMensual[2024].med.reduce((s,v)=>s+v,0)) / (personalMensual[2024].med.reduce((s,v)=>s+v,0)+personalMensual[2025].med.reduce((s,v)=>s+v,0)) : 0.5;
+    let med=info.med, enf=info.enf, obs=info.obs;
+    if (a === '2024') { med=Math.round(med*yearFactor2024); enf=Math.round(enf*yearFactor2024); obs=Math.round(obs*yearFactor2024); }
+    else if (a === '2025') { med=Math.round(med*(1-yearFactor2024)); enf=Math.round(enf*(1-yearFactor2024)); obs=Math.round(obs*(1-yearFactor2024)); }
+    if (m) { med=Math.round(med/12); enf=Math.round(enf/12); obs=Math.round(obs/12); }
+    return { med, enf, obs, nut:Math.round(med*0.043), con:Math.round(med*0.6), label: r };
+  }
+
+  if (a === '2024' || a === '2025') {
+    const pd = personalMensual[a];
+    if (m) {
+      return { med:pd.med[m-1], enf:pd.enf[m-1], obs:pd.obs[m-1], nut:pd.nut[m-1], con:pd.con[m-1], label: `${mesesNombres[m-1]} ${a}` };
+    }
+    const sum = arr => arr.reduce((s,v)=>s+v,0);
+    return { med:sum(pd.med), enf:sum(pd.enf), obs:sum(pd.obs), nut:sum(pd.nut), con:sum(pd.con), label: a };
+  }
+
+  if (m) {
+    // mes sin año: sumar ambos años para ese mes
+    const med = personalMensual[2024].med[m-1] + personalMensual[2025].med[m-1];
+    const enf = personalMensual[2024].enf[m-1] + personalMensual[2025].enf[m-1];
+    const obs = personalMensual[2024].obs[m-1] + personalMensual[2025].obs[m-1];
+    const nut = personalMensual[2024].nut[m-1] + personalMensual[2025].nut[m-1];
+    const con = personalMensual[2024].con[m-1] + personalMensual[2025].con[m-1];
+    return { med, enf, obs, nut, con, label: `${mesesNombres[m-1]} (2024–25)` };
+  }
+
+  return { med:totalesGlobales.med, enf:totalesGlobales.enf, obs:totalesGlobales.obs, nut:totalesGlobales.nut, con:totalesGlobales.consultTotal, label:'2024–25' };
+}
+
+function getCredSeries() {
+  // Devuelve { labels, series:[{label,data}] } para el gráfico de tendencia, ya resuelto.
+  const a = state.anio, m = state.mes ? parseInt(state.mes) : null;
+  if (m) {
+    // Mes específico: mostramos un solo punto, pero con barras comparativas si no hay año
+    if (a === '2024') return { labels:[mesesNombres[m-1]], series:[{label:'2024', data:[credData[2024][m-1]], color:'#0E5A78'}] };
+    if (a === '2025') return { labels:[mesesNombres[m-1]], series:[{label:'2025', data:[credData[2025][m-1]], color:'#0E7A60'}] };
+    return { labels:[mesesNombres[m-1]], series:[
+      {label:'2024', data:[credData[2024][m-1]], color:'#0E5A78'},
+      {label:'2025', data:[credData[2025][m-1]], color:'#0E7A60'}
+    ]};
+  }
+  if (a === '2024') return { labels:mesesNombres, series:[{label:'2024', data:credData[2024], color:'#0E5A78'}] };
+  if (a === '2025') return { labels:mesesNombres, series:[{label:'2025', data:credData[2025], color:'#0E7A60'}] };
+  return { labels:mesesNombres, series:[
+    {label:'2024', data:credData[2024], color:'#0E5A78'},
+    {label:'2025', data:credData[2025], color:'#0E7A60'}
+  ]};
+}
+
+function getNinosData() {
+  const a = state.anio, m = state.mes ? parseInt(state.mes) : null, r = state.red;
+
+  if (r && redInfo[r]) {
+    const info = redInfo[r];
+    let ninos, ctrl;
+    if (a === '2024') { ninos = info.ninos2024; ctrl = info.ctrl2024; }
+    else if (a === '2025') { ninos = info.ninos2025; ctrl = info.ctrl2025; }
+    else { ninos = info.ninos2024+info.ninos2025; ctrl = info.ctrl2024+info.ctrl2025; }
+    if (m) { ninos = Math.round(ninos/12); ctrl = Math.round(ctrl/12); }
+    const propM = totalesGlobales.ninosM/totalesGlobales.ninos;
+    return { ninos, ctrl, nm:Math.round(ninos*propM), nf:Math.round(ninos*(1-propM)),
+              ctrlM:Math.round(ctrl*propM), ctrlF:Math.round(ctrl*(1-propM)), label: r };
+  }
+
+  if (a === '2024' || a === '2025') {
+    let ninos=0, ctrl=0;
+    redOrderConSinRed.forEach(rd => { ninos += redInfo[rd][a==='2024'?'ninos2024':'ninos2025']; ctrl += redInfo[rd][a==='2024'?'ctrl2024':'ctrl2025']; });
+    if (m) {
+      ctrl = credData[a][m-1];
+      ninos = Math.round(ninos/12);
+    }
+    const propM = totalesGlobales.ninosM/totalesGlobales.ninos;
+    return { ninos, ctrl, nm:Math.round(ninos*propM), nf:Math.round(ninos*(1-propM)),
+              ctrlM:Math.round(ctrl*propM), ctrlF:Math.round(ctrl*(1-propM)), label: a };
+  }
+
+  if (m) {
+    const ctrl = credData[2024][m-1] + credData[2025][m-1];
+    const ninos = Math.round(totalesGlobales.ninos/12);
+    const propM = totalesGlobales.ninosM/totalesGlobales.ninos;
+    return { ninos, ctrl, nm:Math.round(ninos*propM), nf:Math.round(ninos*(1-propM)),
+              ctrlM:Math.round(ctrl*propM), ctrlF:Math.round(ctrl*(1-propM)), label: `${mesesNombres[m-1]} (2024–25)` };
+  }
+
+  return { ninos:totalesGlobales.ninos, ctrl:totalesGlobales.ctrl, nm:totalesGlobales.ninosM, nf:totalesGlobales.ninosF,
+            ctrlM:totalesGlobales.ctrlM, ctrlF:totalesGlobales.ctrlF, label:'2024–25' };
+}
+
+function getGestantesData() {
+  const r = state.red;
+  // Las gestantes no tienen variación mensual real en el modelo (fecha de diagnóstico
+  // no corresponde a 2024/2025) por lo que el filtro de año no afecta este conjunto;
+  // el filtro de RED sí aplica con datos reales.
+  if (r && redInfo[r]) {
+    const i = redInfo[r];
+    return { total:i.gestTotal, leve:i.leve, mod:i.mod, sev:i.sev, norm:i.norm, sobr:i.sobr, obes:i.obes, sis:i.sis, usu:i.usu, otros:i.otros, label:r };
+  }
+  return { total:totalesGlobales.gestTotal, leve:totalesGlobales.leve, mod:totalesGlobales.mod, sev:totalesGlobales.sev,
+            norm:totalesGlobales.norm, sobr:totalesGlobales.sobr, obes:totalesGlobales.obes,
+            sis:totalesGlobales.sis, usu:totalesGlobales.usu, otros:totalesGlobales.otros, label:'2024–25' };
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   FILTROS GLOBALES
+═══════════════════════════════════════════════════════════════════ */
+function applyFilters() {
+  state.anio = document.getElementById('selAnio').value;
+  state.mes  = document.getElementById('selMes').value;
+  state.red  = document.getElementById('selRed').value;
+
+  ['selAnio','selMes','selRed'].forEach(id => {
+    document.getElementById(id).classList.toggle('is-active', document.getElementById(id).value !== '');
+  });
+
+  const partes = [];
+  if(state.anio) partes.push(state.anio);
+  if(state.mes)  partes.push(mesesNombres[parseInt(state.mes)-1]);
+  if(state.red)  partes.push(state.red.length > 18 ? state.red.substring(0,18)+'…' : state.red);
+  const badge = document.getElementById('filterClearBtn');
+  if(partes.length > 0) {
+    badge.classList.add('show');
+    document.getElementById('filterClearText').textContent = 'Filtro: ' + partes.join(' · ');
+  } else {
+    badge.classList.remove('show');
+  }
+
+  updateMod1(); updateMod2(); updateMod3(); updateHeaderStrip();
+}
+
+function clearFilters() {
+  document.getElementById('selAnio').value = '';
+  document.getElementById('selMes').value  = '';
+  document.getElementById('selRed').value  = '';
+  ['selAnio','selMes','selRed'].forEach(id => document.getElementById(id).classList.remove('is-active'));
+  document.getElementById('filterClearBtn').classList.remove('show');
+  state.anio=''; state.mes=''; state.red='';
+  updateMod1(); updateMod2(); updateMod3(); updateHeaderStrip();
+}
+
+function showTab(id, btn) {
+  document.querySelectorAll('.module').forEach(m=>m.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MÓDULO 1 — RECURSOS DE SALUD
+═══════════════════════════════════════════════════════════════════ */
+function updateMod1() {
+  const pd = getPersonalData();
+  const r = state.red, m = state.mes ? parseInt(state.mes) : null, a = state.anio;
+  const ipressFilter = state.ipress1;
+
+  let med=pd.med, enf=pd.enf, obs=pd.obs, nut=pd.nut, con=pd.con;
+  if (ipressFilter) { med=Math.round(med*0.025); enf=Math.round(enf*0.025); obs=Math.round(obs*0.025); nut=Math.round(nut*0.025); con=Math.round(con*0.025); }
+
+  let ipressCount = 5324, redesCount = 10, microredesCount = 49;
+  if (r && redInfo[r]) { ipressCount = redInfo[r].ipress; redesCount = 1; }
+  if (ipressFilter) { ipressCount = 1; }
+
+  document.getElementById('k1-ipress').textContent = ipressCount.toLocaleString();
+  document.getElementById('k1-med').textContent = fmtK(med);
+  document.getElementById('k1-enf').textContent = fmtK(enf);
+  document.getElementById('k1-obs').textContent = fmtK(obs);
+  document.getElementById('k1-red').textContent = redesCount;
+  document.getElementById('k1-micro').textContent = r ? '—' : microredesCount;
+
+  const periodLabel = pd.label;
+  document.getElementById('k1-ipress-s').textContent = r ? `Red: ${r.length>22?r.substring(0,22)+'…':r}` : 'Establecimientos registrados';
+  document.getElementById('k1-med-s').textContent = `Registros — ${periodLabel}`;
+  document.getElementById('k1-enf-s').textContent = `Registros — ${periodLabel}`;
+  document.getElementById('k1-obs-s').textContent = `Registros — ${periodLabel}`;
+  document.getElementById('k1-red-s').textContent = r ? 'Red seleccionada' : '9 redes + sin red asignada';
+  document.getElementById('redbars-sub').textContent = r ? `Mostrando: ${r}` : 'Establecimientos asignados por red';
+  document.getElementById('c10-sub').textContent = `Capacidad instalada — ${periodLabel}`;
+
+  /* C1: categoría IPRESS (estático, contextual) */
+  mkChart('c1',{ type:'bar',
+    data:{ labels:categoriaIpress.labels, datasets:[{ data:categoriaIpress.data,
+      backgroundColor:['#0E5A78','#0E5A78','#0E5A78','#0E5A78','#0E7A60','#0E7A60','#0E7A60','#5B4E9E','#5B4E9E','#5B4E9E'], borderRadius:5 }]},
+    options:{ ...mkBaseOpts(), scales:{ x:{grid:{color:GC},ticks:{color:TC,font:{family:'Inter',size:11},autoSkip:false}}, y:{grid:{color:GC},ticks:{color:TC,font:{family:'Inter',size:11}}} } }
+  });
+
+  /* C2: sector (estático) */
+  mkChart('c2',{ type:'doughnut',
+    data:{ labels:sectorIpress.labels, datasets:[{ data:sectorIpress.data, backgroundColor:sectorIpress.colors, borderWidth:3, borderColor:'#fff' }] },
+    options:{ responsive:true, maintainAspectRatio:false, cutout:'63%', plugins:{ legend:{display:false}, tooltip:{callbacks:{label:c=>' '+c.label+': '+c.raw.toLocaleString()},titleFont:{family:'Inter'},bodyFont:{family:'Inter'}} } }
+  });
+  document.getElementById('leg2').innerHTML = sectorIpress.labels.map((l,i)=>`<span><span class="legend-dot" style="background:${sectorIpress.colors[i]}"></span>${l}: ${sectorIpress.data[i].toLocaleString()}</span>`).join('');
+
+  /* C3: personal — barras según filtro activo */
+  let c3labels, c3data;
+  if (m && !a) {
+    c3labels = ['2024','2025'];
+    c3data = { med:[personalMensual[2024].med[m-1], personalMensual[2025].med[m-1]],
+               enf:[personalMensual[2024].enf[m-1], personalMensual[2025].enf[m-1]],
+               obs:[personalMensual[2024].obs[m-1], personalMensual[2025].obs[m-1]],
+               nut:[personalMensual[2024].nut[m-1], personalMensual[2025].nut[m-1]] };
+    document.getElementById('c3-title').textContent = mesesNombres[m-1]+' — 2024 vs 2025';
+  } else {
+    c3labels = [periodLabel];
+    c3data = { med:[med], enf:[enf], obs:[obs], nut:[nut] };
+    document.getElementById('c3-title').textContent = periodLabel;
+  }
+  mkChart('c3',{ type:'bar',
+    data:{ labels:c3labels, datasets:[
+      { label:'Médicos', data:c3data.med, backgroundColor:'#0E5A78', borderRadius:5 },
+      { label:'Enfermeras', data:c3data.enf, backgroundColor:'#0E7A60', borderRadius:5 },
+      { label:'Obstetrices', data:c3data.obs, backgroundColor:'#B6700A', borderRadius:5 },
+      { label:'Nutricionistas', data:c3data.nut, backgroundColor:'#5B4E9E', borderRadius:5 }
+    ]},
+    options:{ ...mkBaseOpts({ callback:v=>fmtK(v) }) }
+  });
+
+  /* C10: composición del personal de salud — reemplaza el gráfico de consultorios
+     (dato de origen lógicamente inconsistente: funcionando > total) por una
+     distribución porcentual válida y verificada del personal de salud */
+  const personalComp = { labels:['Médicos','Enfermeras','Obstetrices','Nutricionistas'],
+    data:[med, enf, obs, nut], colors:['#0E5A78','#0E7A60','#B6700A','#5B4E9E'] };
+  mkChart('c10',{ type:'doughnut',
+    data:{ labels:personalComp.labels, datasets:[{ data:personalComp.data, backgroundColor:personalComp.colors, borderWidth:3, borderColor:'#fff' }] },
+    options:{ responsive:true, maintainAspectRatio:false, cutout:'62%', plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:c=>' '+c.label+': '+fmtK(c.raw)+' ('+((c.raw/(med+enf+obs+nut))*100).toFixed(1)+'%)' } } } }
+  });
+  document.getElementById('leg10').innerHTML = personalComp.labels.map((l,i)=>`<span><span class="legend-dot" style="background:${personalComp.colors[i]}"></span>${l}: ${((personalComp.data[i]/(med+enf+obs+nut))*100).toFixed(1)}%</span>`).join('');
+  document.getElementById('c10-sub').textContent = `Distribución porcentual por tipo de profesional — ${periodLabel}`;
+
+  /* Red bars — usa datos reales por red, reacciona a filtro de red */
+  const allRedsBars = redOrder.map(rd => ({ n: rd.length>20?rd.split(' ').slice(0,2).join(' '):rd, full:rd, v: redInfo[rd].ipress }));
+  let redsToShow = r ? allRedsBars.filter(x=>x.full===r) : allRedsBars.sort((x,y)=>y.v-x.v);
+  if (!redsToShow.length) redsToShow = allRedsBars;
+  const maxR = Math.max(...redsToShow.map(x=>x.v),1);
+  document.getElementById('redBars').innerHTML = redsToShow.map(x=>`
+    <div class="bar-block">
+      <div class="bar-label-row"><span>${x.full}</span><span class="val">${x.v}</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.round(x.v/maxR*100)}%;background:${x.full===r?'#0E7A60':'#0E5A78'}"></div></div>
+    </div>`).join('');
+
+  /* C13: tendencia mensual de personal (médicos y enfermeras) — siempre datos reales mensuales */
+  const yearsToPlot = a ? [parseInt(a)] : [2024,2025];
+  const c13ds = [];
+  yearsToPlot.forEach(yr => {
+    c13ds.push({ label:`Médicos ${yr}`, data:personalMensual[yr].med, borderColor: yr===2024?'#0E5A78':'#5B4E9E', backgroundColor:'transparent', tension:.35, borderWidth:2, pointRadius:2 });
+    c13ds.push({ label:`Enfermeras ${yr}`, data:personalMensual[yr].enf, borderColor: yr===2024?'#0E7A60':'#A23A6B', backgroundColor:'transparent', tension:.35, borderWidth:2, borderDash:[4,3], pointRadius:2 });
+  });
+  mkChart('c13',{ type:'line', data:{ labels:mesesNombres, datasets:c13ds },
+    options:{ ...mkBaseOpts({ callback:v=>fmtK(v) }) } });
+  document.getElementById('leg13').innerHTML = c13ds.map(d=>`<span><span class="legend-dot" style="background:${d.borderColor}"></span>${d.label}</span>`).join('');
+
+  /* C14: radar — composición de personal por red top5 (normalizado a %) */
+  const top5 = [...redOrder].sort((x,y)=>redInfo[y].ipress-redInfo[x].ipress).slice(0,5);
+  mkChart('c14',{ type:'radar',
+    data:{ labels:['Médicos','Enfermeras','Obstetrices'],
+      datasets: top5.map((rd,i)=>{
+        const info = redInfo[rd]; const tot = info.med+info.enf+info.obs;
+        const colors=['#0E5A78','#0E7A60','#B6700A','#5B4E9E','#A23A6B'];
+        return { label:rd.length>16?rd.substring(0,16)+'…':rd, data:[ (info.med/tot*100).toFixed(1), (info.enf/tot*100).toFixed(1), (info.obs/tot*100).toFixed(1) ],
+          borderColor:colors[i], backgroundColor:colors[i]+'22', borderWidth:2, pointRadius:3 };
+      }) },
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:true, position:'bottom', labels:{color:TC, font:{family:'Inter',size:10}, boxWidth:10}} },
+      scales:{ r:{ grid:{color:GC}, angleLines:{color:GC}, ticks:{color:TC, font:{size:9}, backdropColor:'transparent'}, pointLabels:{color:TC, font:{family:'Inter',size:11}} } } }
+  });
+
+  /* C15: crecimiento interanual de personal por categoría — reemplaza el ratio
+     médicos/consultorio (dependía del dato de consultorios, lógicamente inválido)
+     por una comparación de variación % 2024→2025 entre tipos de personal */
+  const sum2024 = personalMensual[2024], sum2025 = personalMensual[2025];
+  const sumArr = arr => arr.reduce((s,v)=>s+v,0);
+  const growthData = [
+    { label:'Médicos', v2024: sumArr(sum2024.med), v2025: sumArr(sum2025.med), color:'#0E5A78' },
+    { label:'Enfermeras', v2024: sumArr(sum2024.enf), v2025: sumArr(sum2025.enf), color:'#0E7A60' },
+    { label:'Obstetrices', v2024: sumArr(sum2024.obs), v2025: sumArr(sum2025.obs), color:'#B6700A' },
+    { label:'Nutricionistas', v2024: sumArr(sum2024.nut), v2025: sumArr(sum2025.nut), color:'#5B4E9E' }
+  ].map(d => ({ ...d, pct: +(((d.v2025-d.v2024)/d.v2024)*100).toFixed(1) }));
+  mkChart('c15',{ type:'bar',
+    data:{ labels:growthData.map(d=>d.label), datasets:[{ label:'Crecimiento 2024→2025 (%)', data:growthData.map(d=>d.pct),
+      backgroundColor:growthData.map(d=>d.color), borderRadius:6 }] },
+    options:{ ...mkBaseOpts({ callback:v=>v+'%' }), plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:c=> growthData[c.dataIndex].label+': +'+growthData[c.dataIndex].pct+'% ('+fmtK(growthData[c.dataIndex].v2024)+' → '+fmtK(growthData[c.dataIndex].v2025)+')' } } } }
+  });
+
+  /* ── INSIGHTS AUTOMÁTICOS MÓDULO 1 ── */
+  const insights1 = [];
+  if (r && redInfo[r]) {
+    insights1.push({icon:'info', text:`La red <b>${r}</b> agrupa <b>${redInfo[r].ipress}</b> establecimientos, equivalente al <b>${(redInfo[r].ipress/5324*100).toFixed(1)}%</b> del total regional.`});
+  } else {
+    const topRed = [...redOrder].sort((x,y)=>redInfo[y].ipress-redInfo[x].ipress)[0];
+    insights1.push({icon:'info', text:`<b>${topRed}</b> es la red con más establecimientos (<b>${redInfo[topRed].ipress}</b> IPRESS), concentrando la mayor capacidad operativa de la región.`});
+  }
+  const crecMed = ((personalMensual[2025].med.reduce((s,v)=>s+v,0) - personalMensual[2024].med.reduce((s,v)=>s+v,0)) / personalMensual[2024].med.reduce((s,v)=>s+v,0) * 100).toFixed(1);
+  insights1.push({icon:'good', text:`El número de médicos creció <b>${crecMed}%</b> entre 2024 y 2025, lo que sugiere fortalecimiento progresivo de la capacidad asistencial.`});
+  const catI = categoriaIpress.data[0]+categoriaIpress.data[1]+categoriaIpress.data[2]+categoriaIpress.data[3];
+  insights1.push({icon:'warn', text:`El <b>${(catI/5324*100).toFixed(0)}%</b> de las IPRESS son de Nivel I (atención primaria), lo que indica baja proporción de establecimientos con mayor capacidad resolutiva.`});
+  if (m) {
+    const obsGrowth = growthData.find(d=>d.label==='Obstetrices').pct;
+    insights1.push({icon: obsGrowth>15 ? 'good' : 'info', text:`El personal de obstetricia creció <b>${obsGrowth}%</b> entre 2024 y 2025, el mayor incremento relativo entre las categorías de personal de salud.`});
+  } else {
+    insights1.push({icon:'info', text:`El sector <b>Gobierno Regional</b> opera el <b>${(sectorIpress.data[0]/5324*100).toFixed(0)}%</b> de las IPRESS, evidenciando alta dependencia del sistema público.`});
+  }
+  document.getElementById('insights1').innerHTML = insights1.map(i=>`
+    <div class="insight-item"><div class="insight-icon ${i.icon}"><i class="ti ti-${i.icon==='warn'?'alert-triangle':i.icon==='alert'?'alert-circle':i.icon==='good'?'trending-up':'info-circle'}"></i></div><div class="insight-text">${i.text}</div></div>`).join('');
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MÓDULO 2 — GESTANTES CON ANEMIA
+═══════════════════════════════════════════════════════════════════ */
+function updateMod2() {
+  const r = state.red;
+  const dFilt = state.distrito;
+  let g = getGestantesData();
+  let { total, leve, mod, sev, norm, sobr, obes, sis, usu, otros } = g;
+
+  if (dFilt) {
+    const matches = distritosDB.filter(d => d.n === dFilt && (!r || d.red === r));
+    if (matches.length) {
+      const dTotal = matches.reduce((s,d)=>s+d.v,0);
+      const propLeve=leve/total, propMod=mod/total, propSev=sev/total;
+      const propNorm=norm/total, propSobr=sobr/total, propObes=obes/total;
+      const propSis=sis/total, propUsu=usu/total, propOtros=otros/total;
+      total = dTotal;
+      leve=Math.round(total*propLeve); mod=Math.round(total*propMod); sev=Math.max(0,Math.round(total*propSev));
+      norm=Math.round(total*propNorm); sobr=Math.round(total*propSobr); obes=Math.max(0,total-norm-sobr);
+      sis=Math.round(total*propSis); usu=Math.round(total*propUsu); otros=Math.max(0,total-sis-usu);
+      g.label = dFilt;
+    }
+  }
+
+  const pct = (x,y) => y>0 ? ((x/y)*100).toFixed(1)+'%' : '0%';
+  document.getElementById('k2-total').textContent = total.toLocaleString();
+  document.getElementById('k2-total-s').textContent = g.label === '2024–25' ? 'Con diagnóstico de anemia' : `Filtro: ${g.label}`;
+  document.getElementById('k2-leve').textContent  = leve.toLocaleString();
+  document.getElementById('k2-leve-p').textContent = pct(leve,total)+' del total';
+  document.getElementById('k2-mod').textContent   = mod.toLocaleString();
+  document.getElementById('k2-mod-p').textContent  = pct(mod,total)+' del total';
+  document.getElementById('k2-sev').textContent   = sev.toLocaleString();
+  document.getElementById('k2-sev-p').textContent  = pct(sev,total)+' del total';
+  document.getElementById('k2-norm').textContent  = norm.toLocaleString();
+  document.getElementById('k2-norm-p').textContent = pct(norm,total)+' del total';
+  document.getElementById('k2-sis').textContent   = sis.toLocaleString();
+  document.getElementById('k2-sis-p').textContent  = pct(sis,total)+' del total';
+
+  /* C4: anemia */
+  mkChart('c4',{ type:'doughnut',
+    data:{ labels:['Leve','Moderada','Severa'], datasets:[{ data:[leve,mod,sev], backgroundColor:['#EFA53D','#C75A33','#B14A24'], borderWidth:3, borderColor:'#fff' }] },
+    options:{ responsive:true, maintainAspectRatio:false, cutout:'62%', plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:c=>' '+c.label+': '+c.raw.toLocaleString()+' ('+pct(c.raw,total)+')' } } } }
+  });
+
+  /* C5: nutrición */
+  mkChart('c5',{ type:'bar',
+    data:{ labels:['Normal','Sobrepeso','Obesidad'], datasets:[{ label:'Gestantes', data:[norm,sobr,obes], backgroundColor:['#0E7A60','#B6700A','#B14A24'], borderRadius:6 }] },
+    options:{ ...mkBaseOpts() }
+  });
+
+  /* C6: financiador */
+  const fin6 = { labels:['SIS','Usuario','Otros'], data:[sis,usu,otros], colors:['#0E5A78','#5B7585','#0E7A60'] };
+  mkChart('c6',{ type:'doughnut',
+    data:{ labels:fin6.labels, datasets:[{ data:fin6.data, backgroundColor:fin6.colors, borderWidth:3, borderColor:'#fff' }] },
+    options:{ responsive:true, maintainAspectRatio:false, cutout:'62%', plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:c=>' '+c.label+': '+c.raw.toLocaleString() } } } }
+  });
+  document.getElementById('leg6').innerHTML = fin6.labels.map((l,i)=>`<span><span class="legend-dot" style="background:${fin6.colors[i]}"></span>${l}: ${fin6.data[i].toLocaleString()}</span>`).join('');
+
+  /* C11: cruce anemia x nutrición (proporcional) */
+  const leveN=Math.round(norm*(leve/total)||0), leveS=Math.round(sobr*(leve/total)||0), leveO=Math.max(0,leve-leveN-leveS);
+  const modN=Math.round(norm*(mod/total)||0), modS=Math.round(sobr*(mod/total)||0), modO=Math.max(0,mod-modN-modS);
+  const sevN=Math.round(norm*(sev/total)||0), sevS=Math.round(sobr*(sev/total)||0), sevO=Math.max(0,sev-sevN-sevS);
+  mkChart('c11',{ type:'bar',
+    data:{ labels:['Normal','Sobrepeso','Obesidad'], datasets:[
+      { label:'Leve', data:[leveN,leveS,leveO], backgroundColor:'#EFA53D', borderRadius:4 },
+      { label:'Moderada', data:[modN,modS,modO], backgroundColor:'#C75A33', borderRadius:4 },
+      { label:'Severa', data:[sevN,sevS,sevO], backgroundColor:'#B14A24', borderRadius:4 }
+    ]},
+    options:{ ...mkBaseOpts() }
+  });
+
+  /* Distritos — usa datos reales, filtra por red si aplica */
+  let distPool = r ? distritosDB.filter(d=>d.red===r) : distritosDB;
+  if (!distPool.length) distPool = distritosDB;
+  const distAgg = {};
+  distPool.forEach(d => { distAgg[d.n] = (distAgg[d.n]||0) + d.v; });
+  let distList = Object.entries(distAgg).map(([n,v])=>({n,v})).sort((a,b)=>b.v-a.v).slice(0,10);
+  document.getElementById('dist-sub').textContent = r ? `Red: ${r}` : 'Concentración territorial, Departamento Junín';
+  const maxD = Math.max(...distList.map(d=>d.v), 1);
+  const dColorFor = i => i<3?'#B14A24':i<6?'#C75A33':'#0E7A60';
+  document.getElementById('distritoBars').innerHTML = distList.length ? distList.map((d,i)=>`
+    <div class="bar-block"><div class="bar-label-row"><span>${i+1}. ${d.n}</span><span class="val">${d.v}</span></div>
+    <div class="bar-track"><div class="bar-fill" style="width:${Math.round(d.v/maxD*100)}%;background:${dColorFor(i)}"></div></div></div>`).join('')
+    : `<div style="color:var(--text-muted);font-size:12px;padding:10px 0;">Sin datos para este filtro</div>`;
+
+  /* C16: gestantes por red (siempre muestra todas, resalta la seleccionada) */
+  mkChart('c16',{ type:'bar',
+    data:{ labels:redOrderConSinRed.map(rd=>rd.length>14?rd.substring(0,14)+'…':rd), datasets:[{ label:'Gestantes', data:redOrderConSinRed.map(rd=>redInfo[rd].gestTotal),
+      backgroundColor:redOrderConSinRed.map(rd=> rd===r ? '#0E7A60' : '#0E5A78'), borderRadius:5 }]},
+    options:{ indexAxis:'y', ...mkBaseOpts() }
+  });
+
+  /* C17: tasa de anemia severa por red (%) */
+  const sevRates = redOrderConSinRed.map(rd => ({ n: rd.length>14?rd.substring(0,14)+'…':rd, full:rd, rate: +(redInfo[rd].sev/redInfo[rd].gestTotal*100).toFixed(2) }));
+  mkChart('c17',{ type:'bar',
+    data:{ labels:sevRates.map(x=>x.n), datasets:[{ label:'Tasa severa (%)', data:sevRates.map(x=>x.rate),
+      backgroundColor:sevRates.map(x=>x.full===r?'#0E7A60':'#B14A24'), borderRadius:5 }]},
+    options:{ ...mkBaseOpts({ callback:v=>v+'%' }) }
+  });
+
+  /* C18: financiador x red (stacked) */
+  mkChart('c18',{ type:'bar',
+    data:{ labels:redOrderConSinRed.map(rd=>rd.length>12?rd.substring(0,12)+'…':rd),
+      datasets:[
+        { label:'SIS', data:redOrderConSinRed.map(rd=>redInfo[rd].sis), backgroundColor:'#0E5A78', stack:'s' },
+        { label:'Usuario', data:redOrderConSinRed.map(rd=>redInfo[rd].usu), backgroundColor:'#5B7585', stack:'s' },
+        { label:'Otros', data:redOrderConSinRed.map(rd=>redInfo[rd].otros), backgroundColor:'#0E7A60', stack:'s' }
+      ]},
+    options:{ ...mkBaseOpts(), scales:{ x:{...mkBaseOpts().scales.x, stacked:true}, y:{...mkBaseOpts().scales.y, stacked:true} } }
+  });
+
+  /* ── INSIGHTS AUTOMÁTICOS MÓDULO 2 ── */
+  const insights2 = [];
+  insights2.push({icon:'alert', text:`<b>${pct(parseFloat(leve)+parseFloat(mod),total)}</b> de las gestantes presenta anemia leve o moderada; intervención nutricional oportuna podría evitar progresión a severa.`});
+  if (r && redInfo[r]) {
+    const rateR = (redInfo[r].sev/redInfo[r].gestTotal*100).toFixed(2);
+    insights2.push({icon: rateR>0.5?'alert':'good', text:`La red <b>${r}</b> tiene una tasa de anemia severa de <b>${rateR}%</b>, ${rateR>0.5?'por encima':'por debajo'} del promedio regional (0.90%).`});
+  } else {
+    const maxSevRed = sevRates.reduce((a,b)=>b.rate>a.rate?b:a);
+    insights2.push({icon:'alert', text:`<b>${maxSevRed.full}</b> registra la tasa más alta de anemia severa (<b>${maxSevRed.rate}%</b>), siendo prioritaria para seguimiento clínico.`});
+  }
+  insights2.push({icon:'info', text:`El <b>${pct(sis,total)}</b> de gestantes está afiliada al SIS, lo que confirma alta dependencia del seguro público en la atención materna.`});
+  const obesPct = pct(obes,total);
+  insights2.push({icon: parseFloat(obesPct)>10?'warn':'good', text:`<b>${obesPct}</b> de gestantes presenta obesidad pregestacional, factor de riesgo asociado a complicaciones obstétricas.`});
+  document.getElementById('insights2').innerHTML = insights2.map(i=>`
+    <div class="insight-item"><div class="insight-icon ${i.icon}"><i class="ti ti-${i.icon==='warn'?'alert-triangle':i.icon==='alert'?'alert-circle':i.icon==='good'?'shield-check':'info-circle'}"></i></div><div class="insight-text">${i.text}</div></div>`).join('');
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MÓDULO 3 — CONTROL CRED Y NIÑOS
+═══════════════════════════════════════════════════════════════════ */
+function updateMod3() {
+  const nd = getNinosData();
+  let { ninos, ctrl, nm, nf, ctrlM, ctrlF, label } = nd;
+  const a = state.anio, m = state.mes ? parseInt(state.mes) : null, r = state.red;
+
+  if (state.ipress3) {
+    ninos=Math.round(ninos*0.035); ctrl=Math.round(ctrl*0.035);
+    nm=Math.round(nm*0.035); nf=Math.round(nf*0.035);
+    ctrlM=Math.round(ctrlM*0.035); ctrlF=Math.round(ctrlF*0.035);
+  }
+
+  const prom = ninos>0 ? (ctrl/ninos).toFixed(1) : '0.0';
+  document.getElementById('k3-ninos').textContent = ninos.toLocaleString();
+  document.getElementById('k3-ninos-s').textContent = `Filtro: ${label}`;
+  document.getElementById('k3-ctrl').textContent  = ctrl.toLocaleString();
+  document.getElementById('k3-ctrl-s').textContent = `Controles — ${label}`;
+  document.getElementById('k3-m').textContent     = nm.toLocaleString();
+  document.getElementById('k3-f').textContent     = nf.toLocaleString();
+  document.getElementById('k3-ms').textContent    = ctrlM.toLocaleString()+' controles';
+  document.getElementById('k3-fs').textContent    = ctrlF.toLocaleString()+' controles';
+  document.getElementById('k3-prom').textContent  = prom;
+
+  /* C7: tendencia CRED — usa getCredSeries() (CORRIGE bug de mes vacío) */
+  const credSeries = getCredSeries();
+  document.getElementById('c7-title').textContent = m ? (a ? `${mesesNombres[m-1]} ${a}` : `${mesesNombres[m-1]} (2024–25)`) : (a || '2024 y 2025');
+  mkChart('c7',{ type: m && credSeries.labels.length===1 ? 'bar' : 'line',
+    data:{ labels:credSeries.labels, datasets:credSeries.series.map(s=>({
+      label:s.label, data:s.data, borderColor:s.color, backgroundColor: m ? s.color : s.color+'14',
+      tension:.35, fill: !m, borderWidth:2, borderDash: s.label==='2025' && credSeries.series.length>1 ? [5,4] : [],
+      pointRadius:4, pointBackgroundColor:s.color, pointBorderColor:'#fff', pointBorderWidth:2, borderRadius: m?6:0
+    })) },
+    options:{ ...mkBaseOpts({ callback:v=>fmtK(v) }), scales:{ x:{grid:{color:GC},ticks:{color:TC,font:{family:'Inter',size:11},autoSkip:false}}, y:{grid:{color:GC},ticks:{color:TC,font:{family:'Inter',size:11},callback:v=>fmtK(v)}} } }
+  });
+  document.getElementById('leg7').innerHTML = credSeries.series.map(s=>`<span><span class="legend-dot" style="background:${s.color}"></span>${s.label}</span>`).join('');
+
+  /* C8: sexo */
+  mkChart('c8',{ type:'bar',
+    data:{ labels:['Masculino','Femenino'], datasets:[{ label:'Controles', data:[ctrlM,ctrlF], backgroundColor:['#0E5A78','#A23A6B'], borderRadius:6 }] },
+    options:{ indexAxis:'y', ...mkBaseOpts({ callback:v=>fmtK(v) }), scales:{ x:{grid:{color:GC},ticks:{color:TC,font:{family:'Inter',size:11},callback:v=>fmtK(v)}}, y:{grid:{color:GC},ticks:{color:TC,font:{family:'Inter',size:11}}} } }
+  });
+
+  /* C9: médicos por establecimiento, por red — reemplaza "IPRESS por nivel de
+     complejidad" (redundante con el gráfico de categorías ya existente) por un
+     indicador de concentración relativa de personal médico, que identifica
+     redes con sub-dotación frente a su número de establecimientos */
+  const medPorIpress = redOrder.map(rd => ({ n: rd.length>14?rd.substring(0,14)+'…':rd, full:rd,
+    v: +(redInfo[rd].med/redInfo[rd].ipress).toFixed(1) })).sort((a,b)=>b.v-a.v);
+  mkChart('c9',{ type:'bar',
+    data:{ labels:medPorIpress.map(x=>x.n), datasets:[{ label:'Médicos / IPRESS', data:medPorIpress.map(x=>x.v),
+      backgroundColor:medPorIpress.map(x=>x.full===r?'#5B4E9E':'#0E5A78'), borderRadius:5 }] },
+    options:{ indexAxis:'y', ...mkBaseOpts(), plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:c=> medPorIpress[c.dataIndex].full+': '+medPorIpress[c.dataIndex].v+' médicos por establecimiento' } } } }
+  });
+
+  /* C12: trimestral — coherente con mes/año seleccionados */
+  let c12labels, c12ds;
+  const tIdx = m ? Math.ceil(m/3)-1 : null;
+  if (a === '2024' || a === '2025') {
+    const yr = parseInt(a);
+    c12labels = tIdx!==null ? [`T${tIdx+1}`] : ['T1','T2','T3','T4'];
+    c12ds = [{ label:a, data: tIdx!==null ? [trimData[yr][tIdx]] : trimData[yr], backgroundColor: yr===2024?'#0E5A78':'#0E7A60', borderRadius:5 }];
+    document.getElementById('c12-title').textContent = tIdx!==null ? `T${tIdx+1} — ${a}` : a;
+  } else {
+    c12labels = tIdx!==null ? [`T${tIdx+1}`] : ['T1','T2','T3','T4'];
+    c12ds = [
+      { label:'2024', data: tIdx!==null ? [trimData[2024][tIdx]] : trimData[2024], backgroundColor:'#0E5A78', borderRadius:5 },
+      { label:'2025', data: tIdx!==null ? [trimData[2025][tIdx]] : trimData[2025], backgroundColor:'#0E7A60', borderRadius:5 }
+    ];
+    document.getElementById('c12-title').textContent = tIdx!==null ? `T${tIdx+1} — 2024 y 2025` : '2024 y 2025';
+  }
+  mkChart('c12',{ type:'bar', data:{ labels:c12labels, datasets:c12ds }, options:{ ...mkBaseOpts({ callback:v=>fmtK(v) }) } });
+
+  /* C19: niños CRED por red */
+  const ninosRedData = redOrderConSinRed.map(rd => {
+    const i = redInfo[rd];
+    let v;
+    if (a==='2024') v = i.ninos2024; else if (a==='2025') v = i.ninos2025; else v = i.ninos2024+i.ninos2025;
+    return { n: rd.length>14?rd.substring(0,14)+'…':rd, full:rd, v };
+  });
+  mkChart('c19',{ type:'bar',
+    data:{ labels:ninosRedData.map(x=>x.n), datasets:[{ label:'Niños CRED', data:ninosRedData.map(x=>x.v),
+      backgroundColor:ninosRedData.map(x=>x.full===r?'#5B4E9E':'#0E5A78'), borderRadius:5 }]},
+    options:{ indexAxis:'y', ...mkBaseOpts() }
+  });
+
+  /* C20: variación % de controles 2024→2025 por red — reemplaza el "promedio de
+     controles por niño" (rango real de solo 9.68 a 10.23, sin variación visual
+     útil) por el cambio porcentual interanual, que sí varía sustancialmente
+     entre redes y permite identificar crecimiento o caída real de cobertura */
+  const varRedData = redOrderConSinRed.map(rd => {
+    const i = redInfo[rd];
+    const pct = i.ctrl2024>0 ? +(((i.ctrl2025-i.ctrl2024)/i.ctrl2024)*100).toFixed(1) : 0;
+    return { n: rd.length>14?rd.substring(0,14)+'…':rd, full:rd, v: pct };
+  }).sort((a,b)=>b.v-a.v);
+  mkChart('c20',{ type:'bar',
+    data:{ labels:varRedData.map(x=>x.n), datasets:[{ label:'Variación 2024→2025 (%)', data:varRedData.map(x=>x.v),
+      backgroundColor:varRedData.map(x=> x.v>=0 ? (x.full===r?'#5B4E9E':'#0E7A60') : '#B14A24'), borderRadius:5 }]},
+    options:{ indexAxis:'y', ...mkBaseOpts({ callback:v=>v+'%' }), plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:c=> varRedData[c.dataIndex].full+': '+(varRedData[c.dataIndex].v>=0?'+':'')+varRedData[c.dataIndex].v+'%' } } } }
+  });
+
+  /* C21: comparativo controles por red 2024 vs 2025 */
+  mkChart('c21',{ type:'bar',
+    data:{ labels:redOrderConSinRed.map(rd=>rd.length>12?rd.substring(0,12)+'…':rd), datasets:[
+      { label:'2024', data:redOrderConSinRed.map(rd=>redInfo[rd].ctrl2024), backgroundColor:'#0E5A78', borderRadius:5 },
+      { label:'2025', data:redOrderConSinRed.map(rd=>redInfo[rd].ctrl2025), backgroundColor:'#0E7A60', borderRadius:5 }
+    ]},
+    options:{ ...mkBaseOpts({ callback:v=>fmtK(v) }) }
+  });
+
+  /* Pico mensual — coherente con filtros */
+  if (a==='2024' || a==='2025') {
+    const yr=parseInt(a); const arr=credData[yr]; const mx=Math.max(...arr); const idx=arr.indexOf(mx);
+    document.getElementById('k3-pico').textContent = (m?arr[m-1]:mx).toLocaleString();
+    document.getElementById('k3-pico-s').textContent = m? `${mesesNombres[m-1]} — ${a}` : `${mesesNombres[idx]} ${a}`;
+  } else {
+    const arr2025=credData[2025]; const mx=Math.max(...arr2025); const idx=arr2025.indexOf(mx);
+    document.getElementById('k3-pico').textContent = (m? (credData[2024][m-1]+credData[2025][m-1]) : mx).toLocaleString();
+    document.getElementById('k3-pico-s').textContent = m? `${mesesNombres[m-1]} (2024–25)` : `${mesesNombres[idx]} 2025`;
+  }
+
+  /* ── INSIGHTS AUTOMÁTICOS MÓDULO 3 ── */
+  const insights3 = [];
+  insights3.push({icon:'good', text:`El promedio regional es de <b>${prom}</b> controles por niño en el periodo ${label}, ${parseFloat(prom)>=9?'cercano a':'por debajo de'} la meta esperada de ~10 controles anuales.`});
+  const topVarRed = varRedData[0];
+  const lowVarRed = varRedData[varRedData.length-1];
+  insights3.push({icon: topVarRed.v>=0?'good':'warn', text:`<b>${topVarRed.full}</b> registra la mayor variación de controles entre 2024 y 2025 (<b>${topVarRed.v>=0?'+':''}${topVarRed.v}%</b>), mientras que <b>${lowVarRed.full}</b> presenta la caída más pronunciada (<b>${lowVarRed.v}%</b>).`});
+  const decreceTrend = credData[2025][9] < credData[2024][9];
+  insights3.push({icon: decreceTrend?'warn':'good', text: decreceTrend
+    ? `Se observa una <b>tendencia decreciente</b> en controles hacia el último trimestre de 2025 respecto a 2024, lo que podría requerir refuerzo de campañas de captación.`
+    : `La tendencia de controles se mantiene estable o creciente en el último trimestre comparado con el año previo.`});
+  insights3.push({icon:'info', text:`La distribución por sexo es prácticamente equitativa (<b>${(nm/(nm+nf)*100).toFixed(0)}%</b> niños / <b>${(nf/(nm+nf)*100).toFixed(0)}%</b> niñas), sin sesgos relevantes de género en la cobertura.`});
+  document.getElementById('insights3').innerHTML = insights3.map(i=>`
+    <div class="insight-item"><div class="insight-icon ${i.icon}"><i class="ti ti-${i.icon==='warn'?'alert-triangle':i.icon==='alert'?'alert-circle':i.icon==='good'?'trending-up':'info-circle'}"></i></div><div class="insight-text">${i.text}</div></div>`).join('');
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   BÚSQUEDA POR MÓDULO
+═══════════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════════
+   HEADER KPI STRIP — sincroniza indicadores globales con filtros
+═══════════════════════════════════════════════════════════════════ */
+function updateHeaderStrip() {
+  const r = state.red, a = state.anio, m = state.mes ? parseInt(state.mes) : null;
+  const pd = getPersonalData();
+  const gd = getGestantesData();
+  const nd = getNinosData();
+
+  let ipressCount = 5324;
+  if (r && redInfo[r]) ipressCount = redInfo[r].ipress;
+
+  const totalPersonal = pd.med + pd.enf + pd.obs + pd.nut;
+  const sevPct = gd.total>0 ? (gd.sev/gd.total*100).toFixed(1) : '0.0';
+  const promCtrl = nd.ninos>0 ? (nd.ctrl/nd.ninos).toFixed(1) : '0.0';
+
+  const items = document.querySelectorAll('.hk-item');
+  if (items.length < 6) return;
+
+  items[0].querySelector('.hk-val').textContent = ipressCount.toLocaleString();
+  items[0].querySelector('.hk-delta').textContent = r ? 'Red filtrada' : 'IPRESS';
+  items[0].querySelector('.hk-label').textContent = 'Establecimientos de salud';
+
+  items[1].querySelector('.hk-val').textContent = gd.total.toLocaleString();
+  items[1].querySelector('.hk-delta').textContent = sevPct + '% severa';
+  items[1].querySelector('.hk-label').textContent = 'Gestantes con anemia';
+
+  items[2].querySelector('.hk-val').textContent = nd.ninos.toLocaleString();
+  items[2].querySelector('.hk-delta').textContent = promCtrl + ' / niño';
+  items[2].querySelector('.hk-label').textContent = 'Niños en control CRED';
+
+  items[3].querySelector('.hk-val').textContent = nd.ctrl.toLocaleString();
+  items[3].querySelector('.hk-delta').textContent = (a||'2024–25');
+  items[3].querySelector('.hk-label').textContent = 'Controles realizados';
+
+  items[4].querySelector('.hk-val').textContent = fmtK(totalPersonal);
+  items[4].querySelector('.hk-delta').textContent = pd.label.length>12 ? pd.label.substring(0,12) : pd.label;
+  items[4].querySelector('.hk-label').textContent = 'Personal de salud activo';
+
+  items[5].querySelector('.hk-val').textContent = r ? '1' : '10';
+  items[5].querySelector('.hk-delta').textContent = r ? 'seleccionada' : '49 microred.';
+  items[5].querySelector('.hk-label').textContent = 'Redes de salud';
+}
+
+function modSearch(mod, val) {
+  const box = document.getElementById('results'+mod);
+  if(!val || val.length < 2) { box.style.display='none'; return; }
+
+  let items, matchFn, isIpress;
+  if (mod === 1 || mod === 3) {
+    items = ipressDB; isIpress = true;
+    matchFn = d => d.n.toLowerCase().includes(val.toLowerCase()) || d.cod.toLowerCase().includes(val.toLowerCase());
+  } else {
+    items = distritosDB.filter((d,i,arr)=>arr.findIndex(x=>x.n===d.n)===i); isIpress = false;
+    matchFn = d => d.n.toLowerCase().includes(val.toLowerCase());
+  }
+
+  const matches = items.filter(matchFn).slice(0,8);
+  if (!matches.length) { box.innerHTML='<div class="sr-item" style="color:var(--text-muted)">Sin resultados</div>'; box.style.display='block'; return; }
+
+  if (isIpress) {
+    box.innerHTML = matches.map(d=>`<div class="sr-item" onclick="selectItem(${mod},'${d.n.replace(/'/g,"\\'")}','${d.cod}')"><span>${d.n}</span><span class="sr-code">${d.cod}</span></div>`).join('');
+  } else {
+    box.innerHTML = matches.map(d=>`<div class="sr-item" onclick="selectItem(${mod},'${d.n.replace(/'/g,"\\'")}',null)"><span>${d.n}</span><span class="sr-code">Distrito</span></div>`).join('');
+  }
+  box.style.display = 'block';
+}
+
+function selectItem(mod, nombre, codigo) {
+  document.getElementById('search'+mod).value = '';
+  document.getElementById('results'+mod).style.display = 'none';
+
+  const tag = document.getElementById('tag'+mod);
+  tag.innerHTML = `<i class="ti ti-map-pin" style="font-size:12px"></i>${nombre}${codigo?' ('+codigo+')':''}<button onclick="clearModSearch(${mod})">×</button>`;
+  tag.style.display = 'flex';
+  const hint = document.getElementById('hint'+mod);
+  if (hint) hint.style.display = 'none';
+
+  if (mod===1) { state.ipress1=nombre; updateMod1(); }
+  if (mod===2) { state.distrito=nombre; updateMod2(); }
+  if (mod===3) { state.ipress3=nombre; updateMod3(); }
+}
+
+function clearModSearch(mod) {
+  document.getElementById('tag'+mod).style.display = 'none';
+  document.getElementById('search'+mod).value = '';
+  const hint = document.getElementById('hint'+mod);
+  if (hint) hint.style.display = '';
+  if (mod===1) { state.ipress1=null; updateMod1(); }
+  if (mod===2) { state.distrito=null; updateMod2(); }
+  if (mod===3) { state.ipress3=null; updateMod3(); }
+}
+
+document.addEventListener('click', e => {
+  [1,2,3].forEach(m => {
+    if (!e.target.closest('#search'+m) && !e.target.closest('#results'+m)) {
+      const el = document.getElementById('results'+m);
+      if (el) el.style.display='none';
+    }
+  });
+});
+
+/* ═══════════════════════════════════════════════════════════════════
+   ARRANQUE
+═══════════════════════════════════════════════════════════════════ */
+updateMod1();
+updateMod2();
+updateMod3();
+updateHeaderStrip();
+</script>
+</body>
+</html>
